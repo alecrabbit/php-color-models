@@ -11,6 +11,7 @@ use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Contract\Store\IConverterStore;
 use AlecRabbit\Color\Model\Converter\Builder\ChainConverterBuilder;
 use AlecRabbit\Color\Model\Exception\InvalidArgument;
+use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
 use ArrayObject;
 use SplQueue;
 use Traversable;
@@ -93,6 +94,9 @@ final class ConverterStore implements IConverterStore
         }
     }
 
+    /**
+     * @throws InvalidArgument
+     */
     private static function assertClass(string $class): void
     {
         if (!is_subclass_of($class, IModelConverter::class)) {
@@ -123,13 +127,16 @@ final class ConverterStore implements IConverterStore
 
     /**
      * @param iterable<class-string<IColorModel>> $conversionPath
+     *
+     * @throws UnsupportedModelConversion
      */
     private function createColorConverter(iterable $conversionPath): IDColorConverter
     {
         return $this->chainConverterBuilder
             ->withConverters($this->getModelConverters())
             ->forPath($conversionPath)
-            ->build();
+            ->build()
+        ;
     }
 
     /**
