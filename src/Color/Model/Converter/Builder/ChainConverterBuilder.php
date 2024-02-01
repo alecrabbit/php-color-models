@@ -43,6 +43,8 @@ final class ChainConverterBuilder implements IChainConverterBuilder
             throw new LogicException('Path is not provided.');
         }
 
+        $this->ensureConvertersCache();
+
         return new ChainConverter(
             $this->getConvertersChain($this->conversionPath)
         );
@@ -56,8 +58,6 @@ final class ChainConverterBuilder implements IChainConverterBuilder
      */
     private function getConvertersChain(Traversable $conversionPath): Traversable
     {
-        $this->ensureConvertersCache();
-
         $previous = null;
         foreach ($conversionPath as $current) {
             if ($previous === null) {
