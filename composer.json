@@ -22,6 +22,7 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
+            "AlecRabbit\\Builder\\": "src\\Builder\\",
             "AlecRabbit\\Color\\": "src\\Color\\"
         },
         "files": [

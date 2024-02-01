@@ -12,16 +12,16 @@ use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
 interface IChainConverterBuilder
 {
     /**
-     * @param iterable<class-string<IColorModel>> $conversionPath
+     * @param \Traversable<class-string<IColorModel>> $conversionPath
      *
      * @throws UnsupportedModelConversion
      */
-    public function forPath(iterable $conversionPath): IChainConverterBuilder;
+    public function forPath(\Traversable $conversionPath): IChainConverterBuilder;
 
     /**
-     * @param iterable<class-string<IModelConverter>> $converters
+     * @param \Traversable<class-string<IModelConverter>> $converters
      */
-    public function withConverters(iterable $converters): IChainConverterBuilder;
+    public function withConverters(\Traversable $converters): IChainConverterBuilder;
 
     public function build(): IChainConverter;
 }

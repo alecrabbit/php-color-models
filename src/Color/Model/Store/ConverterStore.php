@@ -126,11 +126,11 @@ final class ConverterStore implements IConverterStore
     }
 
     /**
-     * @param iterable<class-string<IColorModel>> $conversionPath
+     * @param Traversable<class-string<IColorModel>> $conversionPath
      *
      * @throws UnsupportedModelConversion
      */
-    private function createColorConverter(iterable $conversionPath): IConverter
+    private function createColorConverter(Traversable $conversionPath): IConverter
     {
         return $this->chainConverterBuilder
             ->withConverters($this->getModelConverters())

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Converter\Builder;
 
+use AlecRabbit\Builder\AbstractBuilder;
+use AlecRabbit\Builder\Dummy\Dummy;
+use AlecRabbit\Builder\Dummy\IDummy;
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IChainConverterBuilder;
 use AlecRabbit\Color\Model\Contract\Converter\IChainConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IConverter;
@@ -16,29 +19,32 @@ use Traversable;
 
 use function is_subclass_of;
 
-final class ChainConverterBuilder implements IChainConverterBuilder
+final class ChainConverterBuilder extends AbstractBuilder implements IChainConverterBuilder
 {
-    /** @var iterable<class-string<IConverter>> */
-    private iterable $converters;
-
-    /** @var iterable<class-string<IConverter>> */
-    private iterable $convertersCache;
-
-    /** @var iterable<class-string<IConverter>> */
-    private iterable $chainConverters;
+    /**
+     * @param \Traversable<class-string<IConverter>>|IDummy $converters
+     * @param \Traversable<class-string<IConverter>>|IDummy $convertersChain
+     * @param \Traversable<class-string<IConverter>>|IDummy $convertersCache
+     */
+    public function __construct(
+        private \Traversable|IDummy $converters = new Dummy(),
+        private \Traversable|IDummy $convertersChain = new Dummy(),
+        private \Traversable|IDummy $convertersCache = new Dummy(),
+    ) {
+    }
 
     public function build(): IChainConverter
     {
         $this->validate();
 
-        return new ChainConverter($this->chainConverters);
+        return new ChainConverter($this->convertersChain);
     }
 
-    private function validate(): void
+    protected function validate(): void
     {
         match (true) {
-            !isset($this->chainConverters) => throw new LogicException('Path is not provided.'),
-            !isset($this->converters) => throw new LogicException('Converters are not set.'),
+            $this->isDummy($this->convertersChain) => throw new LogicException('Path is not provided.'),
+            $this->isDummy($this->converters) => throw new LogicException('Converters are not set.'),
             default => null,
         };
     }
@@ -46,50 +52,50 @@ final class ChainConverterBuilder implements IChainConverterBuilder
     /**
      * @inheritDoc
      */
-    public function forPath(iterable $conversionPath): IChainConverterBuilder
+    public function forPath(\Traversable $conversionPath): IChainConverterBuilder
     {
         $clone = clone $this;
-        $clone->chainConverters = $this->getChainConvertersFromPath($conversionPath);
+        $clone->convertersChain = $this->getConvertersChain($conversionPath);
         return $clone;
     }
 
     /**
-     * @param iterable<class-string<IColorModel>> $conversionPath
+     * @param Traversable<class-string<IColorModel>> $conversionPath
      *
      * @return Traversable<class-string<IConverter>>
      * @throws UnsupportedModelConversion
      */
-    private function getChainConvertersFromPath(iterable $conversionPath): Traversable
+    private function getConvertersChain(\Traversable $conversionPath): Traversable
     {
-        $prev = null;
-        foreach ($conversionPath as $model) {
-            if ($prev === null) {
-                $prev = $model;
+        $this->ensureConvertersCache();
+
+        $previous = null;
+        foreach ($conversionPath as $current) {
+            if ($previous === null) {
+                $previous = $current;
                 continue;
             }
 
-            yield $this->getConverterClass($prev, $model);
-            $prev = $model;
+            yield $this->getConverterClass($previous, $current);
+            $previous = $current;
         }
     }
 
     /**
-     * @param class-string<IColorModel> $prev
-     * @param class-string<IColorModel> $model
+     * @param class-string<IColorModel> $previous
+     * @param class-string<IColorModel> $current
      *
      * @return class-string<IConverter>
      * @throws UnsupportedModelConversion
      */
-    private function getConverterClass(string $prev, string $model): string
+    private function getConverterClass(string $previous, string $current): string
     {
-        $this->ensureConvertersCache();
-
         /**
          * @var string $key
          * @var class-string<IModelConverter> $converter
          */
         foreach ($this->convertersCache as $key => $converter) {
-            if (self::concatKey($prev, $model) === $key) {
+            if (self::concatKey($previous, $current) === $key) {
                 return $converter;
             }
         }
@@ -97,19 +103,23 @@ final class ChainConverterBuilder implements IChainConverterBuilder
         throw new UnsupportedModelConversion(
             sprintf(
                 'Converter from "%s" to "%s" not found.',
-                $prev,
-                $model,
+                $previous,
+                $current,
             )
         );
     }
 
     private function ensureConvertersCache(): void
     {
-        if (!isset($this->convertersCache)) {
-            $this->convertersCache = [];
+        if ($this->convertersCache instanceof IDummy) {
+            /** @psalm-suppress MixedPropertyTypeCoercion */
+            $this->convertersCache = new \ArrayObject();
+
+            /** @var class-string<IConverter> $converter */
             foreach ($this->converters as $converter) {
                 if (is_subclass_of($converter, IModelConverter::class)) {
-                    $this->convertersCache[self::createKey($converter)] = $converter;
+                    $key = self::createKey($converter);
+                    $this->convertersCache->offsetSet($key, $converter);
                 }
             }
         }
