@@ -1,0 +1,25 @@
+parameters:
+  namespace: 'AlecRabbit\\Color'
+
+# Add module files here
+imports:
+  - .common/paths.yaml
+  - module/contract.yaml
+  - module/exception.yaml
+  - module/model.yaml
+  - module/root.yaml
+
+deptrac:
+  ruleset:
+    Contract:
+      - +Exception
+      - +Model
+    Exception: ~
+    Model: ~
+    Root:
+      - +Contract
+      - +Exception
+      - +Model
+#  skip_violations:
+#    NS\Class:
+#      - AnotherNS\Class
