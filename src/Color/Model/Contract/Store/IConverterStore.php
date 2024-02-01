@@ -21,5 +21,5 @@ interface IConverterStore
     /**
      * @throws UnsupportedModelConversion
      */
-    public function getColorConverter(IColorModel $from, IColorModel $to): IDColorConverter;
+    public function getConverter(IColorModel $from, IColorModel $to): IDColorConverter;
 }

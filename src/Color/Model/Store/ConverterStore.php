@@ -118,7 +118,7 @@ final class ConverterStore implements IConverterStore
         return self::extractFrom($class) . '::' . self::extractTo($class);
     }
 
-    public function getColorConverter(IColorModel $from, IColorModel $to): IDColorConverter
+    public function getConverter(IColorModel $from, IColorModel $to): IDColorConverter
     {
         return $this->createColorConverter(
             $this->findConversionPath($from, $to)
