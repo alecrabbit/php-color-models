@@ -8,20 +8,21 @@ use AlecRabbit\Color\Model\Contract\Converter\IChainConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
+use Traversable;
 
 interface IChainConverterBuilder
 {
     /**
-     * @param \Traversable<class-string<IColorModel>> $conversionPath
+     * @param Traversable<class-string<IColorModel>> $conversionPath
      *
      * @throws UnsupportedModelConversion
      */
-    public function forPath(\Traversable $conversionPath): IChainConverterBuilder;
+    public function withPath(Traversable $conversionPath): IChainConverterBuilder;
 
     /**
-     * @param \Traversable<class-string<IModelConverter>> $converters
+     * @param Traversable<class-string<IModelConverter>> $converters
      */
-    public function withConverters(\Traversable $converters): IChainConverterBuilder;
+    public function withConverters(Traversable $converters): IChainConverterBuilder;
 
     public function build(): IChainConverter;
 }

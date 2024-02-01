@@ -13,21 +13,11 @@ abstract readonly class AModelConverter implements IModelConverter
 {
     protected ICoreConverter $converter;
 
-    public function __construct( ICoreConverter $converter = null)
+    public function __construct(ICoreConverter $converter = null)
     {
         /** @var null|class-string<DColor> $dtoType */
         $this->converter = $converter ?? static::createConverter();
     }
-
-    public static function from(): IColorModel
-    {
-        return new (static::getSourceModelClass())();
-    }
-
-    /**
-     * @return class-string<IColorModel>
-     */
-    abstract protected static function getSourceModelClass(): string;
 
     protected static function createConverter(): ICoreConverter
     {
@@ -38,6 +28,16 @@ abstract readonly class AModelConverter implements IModelConverter
      * @return class-string<ICoreConverter>
      */
     abstract protected static function getCoreConverterClass(): string;
+
+    public static function from(): IColorModel
+    {
+        return new (static::getSourceModelClass())();
+    }
+
+    /**
+     * @return class-string<IColorModel>
+     */
+    abstract protected static function getSourceModelClass(): string;
 
     public static function to(): IColorModel
     {

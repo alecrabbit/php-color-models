@@ -23,6 +23,7 @@ use AlecRabbit\Tests\TestCase\TestCase;
 use ArrayObject;
 use LogicException;
 use PHPUnit\Framework\Attributes\Test;
+use Traversable;
 
 final class ChainConverterBuilderTest extends TestCase
 {
@@ -46,7 +47,7 @@ final class ChainConverterBuilderTest extends TestCase
 
         $converter = $builder
             ->withConverters(new ArrayObject())
-            ->forPath(new ArrayObject())
+            ->withPath(new ArrayObject())
             ->build()
         ;
 
@@ -69,7 +70,7 @@ final class ChainConverterBuilderTest extends TestCase
 
         $converter = $builder
             ->withConverters($this->getModelConverters())
-            ->forPath($conversionPath)
+            ->withPath($conversionPath)
             ->build()
         ;
 
@@ -83,38 +84,7 @@ final class ChainConverterBuilderTest extends TestCase
         self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
     }
 
-    #[Test]
-    public function throwsIfConverterNotFoundForProvidedPath(): void
-    {
-        $builder = $this->getTesteeInstance();
-
-        $conversionPath = new ArrayObject([
-            ModelHSL::class,
-            ModelCMY::class,
-        ]);
-
-        $converter = $builder
-            ->withConverters($this->getModelConverters())
-            ->forPath($conversionPath)
-            ->build()
-        ;
-
-        self::assertInstanceOf(ChainConverterBuilder::class, $builder);
-
-        $color = new DHSL(0, 0, 0);
-
-        $this->expectException(UnsupportedModelConversion::class);
-        $this->expectExceptionMessage(
-            'Converter from "AlecRabbit\Color\Model\ModelHSL" to "AlecRabbit\Color\Model\ModelCMY" not found.'
-        );
-
-        $actual = $converter->convert($color);
-
-        self::assertInstanceOf(DCMY::class, $actual);
-        self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
-    }
-
-    private function getModelConverters(): \Traversable
+    private function getModelConverters(): Traversable
     {
         return new ArrayObject(
             [
@@ -129,6 +99,37 @@ final class ChainConverterBuilderTest extends TestCase
     }
 
     #[Test]
+    public function throwsIfConverterNotFoundForProvidedPath(): void
+    {
+        $this->expectException(UnsupportedModelConversion::class);
+        $this->expectExceptionMessage(
+            'Converter from "AlecRabbit\Color\Model\ModelHSL" to "AlecRabbit\Color\Model\ModelCMY" not found.'
+        );
+
+        $builder = $this->getTesteeInstance();
+
+        $conversionPath = new ArrayObject([
+            ModelHSL::class,
+            ModelCMY::class,
+        ]);
+
+        $converter = $builder
+            ->withConverters($this->getModelConverters())
+            ->withPath($conversionPath)
+            ->build()
+        ;
+
+        self::assertInstanceOf(ChainConverterBuilder::class, $builder);
+
+        $color = new DHSL(0, 0, 0);
+
+        $actual = $converter->convert($color);
+
+        self::assertInstanceOf(DCMY::class, $actual);
+        self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
+    }
+
+    #[Test]
     public function throwsIfConvertersAreNotSet(): void
     {
         $builder = $this->getTesteeInstance();
@@ -136,10 +137,15 @@ final class ChainConverterBuilderTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Converters are not set.');
 
-        $builder
-            ->forPath(new ArrayObject())
+        $converter = $builder
+            ->withPath(new ArrayObject())
             ->build()
         ;
+
+        $color = new DRGB(0, 0, 0);
+        $converter->convert($color); // unwraps generator
+
+        self::fail('Exception was not thrown.');
     }
 
     #[Test]

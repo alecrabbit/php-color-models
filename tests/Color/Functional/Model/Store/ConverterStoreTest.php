@@ -28,19 +28,6 @@ final class ConverterStoreTest extends TestCase
     private const MODEL_CONVERTERS = 'modelConverters';
     private static array $modelConverters = [];
 
-    private static function getConvertersArray(): array
-    {
-        return
-            [
-                CMYKToCMYModelConverter::class,
-                CMYToCMYKModelConverter::class,
-                CMYToRGBModelConverter::class,
-                HSLToRGBModelConverter::class,
-                RGBToCMYModelConverter::class,
-                RGBToHSLModelConverter::class,
-            ];
-    }
-
     #[Test]
     public function canBeInstantiated(): void
     {
@@ -95,6 +82,19 @@ final class ConverterStoreTest extends TestCase
     private static function setModelConvertersStorage(mixed $value): void
     {
         self::setPropertyValue(ConverterStore::class, self::MODEL_CONVERTERS, $value);
+    }
+
+    private static function getConvertersArray(): array
+    {
+        return
+            [
+                CMYKToCMYModelConverter::class,
+                CMYToCMYKModelConverter::class,
+                CMYToRGBModelConverter::class,
+                HSLToRGBModelConverter::class,
+                RGBToCMYModelConverter::class,
+                RGBToHSLModelConverter::class,
+            ];
     }
 
     protected function tearDown(): void

@@ -35,7 +35,7 @@ final class ChainConverterBuilderTest extends TestCase
 
         $converter = $builder
             ->withConverters(new ArrayObject())
-            ->forPath(new ArrayObject())
+            ->withPath(new ArrayObject())
             ->build()
         ;
 
@@ -58,10 +58,15 @@ final class ChainConverterBuilderTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Converters are not set.');
 
-        $builder
-            ->forPath(new ArrayObject())
+        $converter = $builder
+            ->withPath(new ArrayObject())
             ->build()
         ;
+
+        $color = $this->getColorMock();
+        $converter->convert($color); // unwraps generator
+
+        self::fail('Exception was not thrown.');
     }
 
     #[Test]

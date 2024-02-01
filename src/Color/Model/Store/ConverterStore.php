@@ -134,7 +134,7 @@ final class ConverterStore implements IConverterStore
     {
         return $this->chainConverterBuilder
             ->withConverters($this->getModelConverters())
-            ->forPath($conversionPath)
+            ->withPath($conversionPath)
             ->build()
         ;
     }

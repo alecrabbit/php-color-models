@@ -39,7 +39,8 @@ final class CMYToCMYKModelConverterTest extends TestCase
         $converter
             ->expects($this->once())
             ->method('convert')
-            ->willReturn($expected);
+            ->willReturn($expected)
+        ;
 
         $testee = $this->getTesteeInstance(
             converter: $converter,
