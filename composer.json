@@ -1,0 +1,36 @@
+{
+    "name": "alecrabbit/php-color-models",
+    "description": "Package for color models",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "php",
+        "color",
+        "model",
+        "convert"
+    ],
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "*",
+        "phpunit/php-code-coverage": "*",
+        "phpunit/phpunit": "^10.0",
+        "symfony/console": "*",
+        "symfony/var-dumper": "*"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "AlecRabbit\\Color\\": "src\\Color\\"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AlecRabbit\\Tests\\": "tests\\"
+        }
+    }
+}

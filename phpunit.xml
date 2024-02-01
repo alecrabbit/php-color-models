@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         executionOrder="random"
+         beStrictAboutOutputDuringTests="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         colors="true"
+         cacheDirectory=".tools/.phpunit.cache"
+         beStrictAboutCoverageMetadata="false"
+         stopOnError="false"
+         stopOnFailure="false"
+>
+  <testsuites>
+    <testsuite name="Color/Functional">
+      <directory>tests/Color/Functional</directory>
+    </testsuite>
+    <testsuite name="Color/Unit">
+      <directory>tests/Color/Unit</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

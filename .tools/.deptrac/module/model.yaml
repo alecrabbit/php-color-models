@@ -1,0 +1,6 @@
+deptrac:
+  layers:
+    - name: Model
+      collectors:
+        - type: className
+          value: '%namespace%\\Model\\.*'
