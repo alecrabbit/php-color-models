@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Contract\Store;
 
-use AlecRabbit\Color\Model\Contract\Converter\IDColorConverter;
+use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Exception\InvalidArgument;
@@ -21,5 +21,5 @@ interface IConverterStore
     /**
      * @throws UnsupportedModelConversion
      */
-    public function getConverter(IColorModel $from, IColorModel $to): IDColorConverter;
+    public function getConverter(IColorModel $from, IColorModel $to): IConverter;
 }

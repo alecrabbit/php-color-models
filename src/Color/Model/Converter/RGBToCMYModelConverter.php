@@ -22,7 +22,7 @@ final readonly class RGBToCMYModelConverter extends AModelConverter
         return ModelCMY::class;
     }
 
-    protected static function getConverterClass(): string
+    protected static function getCoreConverterClass(): string
     {
         return RGBToCMY::class;
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AlecRabbit\Tests\Color\Unit\Model\Converter\Core;
 
 
-use AlecRabbit\Color\Model\Contract\Converter\Core\IDCoreConverter;
+use AlecRabbit\Color\Model\Contract\Converter\Core\ICoreConverter;
 use AlecRabbit\Color\Model\Converter\Core\CMYToRGB;
 use AlecRabbit\Color\Model\DTO\DCMY;
 use AlecRabbit\Color\Model\DTO\DHSL;
@@ -37,7 +37,7 @@ final class CMYToRGBTest extends TestCase
 
     protected function getTesteeInstance(
         ?int $precision = null,
-    ): IDCoreConverter {
+    ): ICoreConverter {
         return new CMYToRGB(
             precision: $precision ?? 5,
         );

@@ -9,6 +9,7 @@ use AlecRabbit\Color\Model\Converter\Core\A\ACoreConverter;
 use AlecRabbit\Color\Model\DTO\DHSL as HSL;
 use AlecRabbit\Color\Model\DTO\DRGB as RGB;
 
+/** @internal */
 final readonly class HSLToRGB extends ACoreConverter
 {
     public function __construct(int $precision = self::CALC_PRECISION)

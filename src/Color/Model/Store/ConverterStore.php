@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AlecRabbit\Color\Model\Store;
 
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IChainConverterBuilder;
-use AlecRabbit\Color\Model\Contract\Converter\IDColorConverter;
+use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Contract\Store\IConverterStore;
@@ -118,7 +118,7 @@ final class ConverterStore implements IConverterStore
         return self::extractFrom($class) . '::' . self::extractTo($class);
     }
 
-    public function getConverter(IColorModel $from, IColorModel $to): IDColorConverter
+    public function getConverter(IColorModel $from, IColorModel $to): IConverter
     {
         return $this->createColorConverter(
             $this->findConversionPath($from, $to)
@@ -130,7 +130,7 @@ final class ConverterStore implements IConverterStore
      *
      * @throws UnsupportedModelConversion
      */
-    private function createColorConverter(iterable $conversionPath): IDColorConverter
+    private function createColorConverter(iterable $conversionPath): IConverter
     {
         return $this->chainConverterBuilder
             ->withConverters($this->getModelConverters())

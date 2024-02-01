@@ -9,6 +9,7 @@ use AlecRabbit\Color\Model\Converter\Core\A\ACoreConverter;
 use AlecRabbit\Color\Model\DTO\DCMY as CMY;
 use AlecRabbit\Color\Model\DTO\DCMYK as CMYK;
 
+/** @internal */
 final readonly class CMYToCMYK extends ACoreConverter
 {
     public function __construct(int $precision = self::CALC_PRECISION)

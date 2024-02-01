@@ -6,7 +6,7 @@ namespace AlecRabbit\Color\Model\Converter\Builder;
 
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IChainConverterBuilder;
 use AlecRabbit\Color\Model\Contract\Converter\IChainConverter;
-use AlecRabbit\Color\Model\Contract\Converter\IDColorConverter;
+use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Converter\ChainConverter;
@@ -18,13 +18,13 @@ use function is_subclass_of;
 
 final class ChainConverterBuilder implements IChainConverterBuilder
 {
-    /** @var iterable<class-string<IDColorConverter>> */
+    /** @var iterable<class-string<IConverter>> */
     private iterable $converters;
 
-    /** @var iterable<class-string<IDColorConverter>> */
+    /** @var iterable<class-string<IConverter>> */
     private iterable $convertersCache;
 
-    /** @var iterable<class-string<IDColorConverter>> */
+    /** @var iterable<class-string<IConverter>> */
     private iterable $chainConverters;
 
     public function build(): IChainConverter
@@ -56,7 +56,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
     /**
      * @param iterable<class-string<IColorModel>> $conversionPath
      *
-     * @return Traversable<class-string<IDColorConverter>>
+     * @return Traversable<class-string<IConverter>>
      * @throws UnsupportedModelConversion
      */
     private function getChainConvertersFromPath(iterable $conversionPath): Traversable
@@ -77,7 +77,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
      * @param class-string<IColorModel> $prev
      * @param class-string<IColorModel> $model
      *
-     * @return class-string<IDColorConverter>
+     * @return class-string<IConverter>
      * @throws UnsupportedModelConversion
      */
     private function getConverterClass(string $prev, string $model): string

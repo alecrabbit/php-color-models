@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AlecRabbit\Tests\Color\Unit\Model\Converter;
 
 
-use AlecRabbit\Color\Model\Contract\Converter\Core\IDCoreConverter;
+use AlecRabbit\Color\Model\Contract\Converter\Core\ICoreConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Converter\CMYToRGBModelConverter;
@@ -55,13 +55,13 @@ final class CMYToRGBModelConverterTest extends TestCase
         return $this->createMock(DColor::class);
     }
 
-    protected function getConverterMock(): MockObject&IDCoreConverter
+    protected function getConverterMock(): MockObject&ICoreConverter
     {
-        return $this->createMock(IDCoreConverter::class);
+        return $this->createMock(ICoreConverter::class);
     }
 
     protected function getTesteeInstance(
-        ?IDCoreConverter $converter = null,
+        ?ICoreConverter $converter = null,
     ): IModelConverter {
         return new CMYToRGBModelConverter(
             converter: $converter ?? $this->getConverterMock(),
