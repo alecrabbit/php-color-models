@@ -84,6 +84,33 @@ final class ChainConverterBuilderTest extends TestCase
         self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
     }
 
+    #[Test]
+    public function canBuildWithCallsInDifferentOrder(): void
+    {
+        $builder = $this->getTesteeInstance();
+
+        $conversionPath = new ArrayObject([
+            ModelHSL::class,
+            ModelRGB::class,
+            ModelCMY::class,
+        ]);
+
+        $converter = $builder
+            ->withPath($conversionPath)
+            ->withConverters($this->getModelConverters())
+            ->build()
+        ;
+
+        self::assertInstanceOf(ChainConverterBuilder::class, $builder);
+
+        $color = new DHSL(0, 0, 0);
+
+        $actual = $converter->convert($color);
+
+        self::assertInstanceOf(DCMY::class, $actual);
+        self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
+    }
+
     private function getModelConverters(): Traversable
     {
         return new ArrayObject(
@@ -121,12 +148,9 @@ final class ChainConverterBuilderTest extends TestCase
 
         self::assertInstanceOf(ChainConverterBuilder::class, $builder);
 
-        $color = new DHSL(0, 0, 0);
+        $converter->convert(new DHSL(0, 0, 0));
 
-        $actual = $converter->convert($color);
-
-        self::assertInstanceOf(DCMY::class, $actual);
-        self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
+        self::fail('Exception was not thrown.');
     }
 
     #[Test]

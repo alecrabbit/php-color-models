@@ -34,8 +34,8 @@ final class ChainConverterBuilderTest extends TestCase
         $builder = $this->getTesteeInstance();
 
         $converter = $builder
-            ->withConverters(new ArrayObject())
             ->withPath(new ArrayObject())
+            ->withConverters(new ArrayObject())
             ->build()
         ;
 
