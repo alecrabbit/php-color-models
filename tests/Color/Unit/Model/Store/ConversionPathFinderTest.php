@@ -7,7 +7,9 @@ namespace AlecRabbit\Tests\Color\Unit\Model\Store;
 use AlecRabbit\Color\Model\Store\ConversionPathFinder;
 use AlecRabbit\Color\Model\Store\IConversionPathFinder;
 use AlecRabbit\Tests\TestCase\TestCase;
+use ArrayObject;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 
 final class ConversionPathFinderTest extends TestCase
 {
@@ -18,8 +20,25 @@ final class ConversionPathFinderTest extends TestCase
         self::assertInstanceOf(ConversionPathFinder::class, $finder);
     }
 
-    private function getTesteeInstance(): IConversionPathFinder
+    private function getTesteeInstance(
+        ?\Traversable $modelConverters = null,
+        ?ArrayObject $models = null,
+        ?ArrayObject $graph = null,
+    ): IConversionPathFinder {
+        return new ConversionPathFinder(
+            modelConverters: $modelConverters ?? $this->getTraversableMock(),
+            models: $models ?? $this->getArrayObjectMock(),
+            graph: $graph ?? $this->getArrayObjectMock(),
+        );
+    }
+
+    private function getTraversableMock(): MockObject&\Traversable
     {
-        return new ConversionPathFinder();
+        return $this->createMock(\Traversable::class);
+    }
+
+    private function getArrayObjectMock(): MockObject&ArrayObject
+    {
+        return $this->createMock(ArrayObject::class);
     }
 }

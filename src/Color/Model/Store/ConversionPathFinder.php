@@ -4,14 +4,119 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Store;
 
+use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
+use ArrayObject;
+use SplQueue;
 
 final readonly class ConversionPathFinder implements IConversionPathFinder
 {
+    private ArrayObject $models;
+    private ArrayObject $graph;
+
+    public function __construct(
+        private \Traversable $modelConverters,
+        ArrayObject $models = new ArrayObject(),
+        ArrayObject $graph = new ArrayObject(),
+    ) {
+        $this->models = $models;
+        $this->graph = $graph;
+
+        $this->initialize();
+    }
+
+    private function initialize(): void
+    {
+        $this->buildModels();
+        $this->buildGraph();
+    }
+
+
+    private function buildModels(): void
+    {
+        /** @var class-string<IModelConverter> $class */
+        foreach ($this->modelConverters as $class) {
+            $this->setModel(self::extractFrom($class));
+            $this->setModel(self::extractTo($class));
+        }
+    }
+
+    private function setModel(string $key): void
+    {
+        if (!$this->models->offsetExists($key)) {
+            $this->models->offsetSet($key, true);
+        }
+    }
+
+    /**
+     * @param class-string<IModelConverter> $class
+     * @return class-string<IColorModel>
+     */
+    protected static function extractFrom(
+        string $class
+    ): string {
+        return $class::from()::class;
+    }
+
+    /**
+     * @param class-string<IModelConverter> $class
+     * @return class-string<IColorModel>
+     */
+    protected static function extractTo(
+        string $class
+    ): string {
+        return $class::to()::class;
+    }
+
+    private function buildGraph(): void
+    {
+        /** @var class-string<IColorModel> $model */
+        foreach ($this->models as $model => $_) {
+            $this->graph->offsetSet($model, []);
+        }
+
+        /** @var class-string<IModelConverter> $class */
+        foreach ($this->modelConverters as $class) {
+            $from = self::extractFrom($class);
+
+            /** @var array $value */
+            $value = $this->graph->offsetGet($from);
+            $value[] = self::extractTo($class);
+            $this->graph->offsetSet($from, $value);
+        }
+    }
 
     public function findPath(IColorModel $from, IColorModel $to): \Traversable
     {
-        // TODO: Implement findPath() method.
-        throw new \RuntimeException(__METHOD__ . ' Not implemented.');
+        $visited = [];
+        $queue = new SplQueue();
+
+        $fromClass = $from::class;
+        $toClass = $to::class;
+
+        $queue->enqueue([$fromClass]);
+        $visited[$fromClass] = true;
+
+        while (!$queue->isEmpty()) {
+            /** @var Array<class-string<IColorModel>> $path */
+            $path = $queue->dequeue();
+            $node = end($path);
+
+            if ($node === $toClass) {
+                yield from $path;
+            }
+
+            $neighbours = $this->graph[$node] ?? [];
+
+            /** @var class-string<IColorModel> $neighbor */
+            foreach ($neighbours as $neighbor) {
+                if (!isset($visited[$neighbor])) {
+                    $visited[$neighbor] = true;
+                    $newPath = $path;
+                    $newPath[] = $neighbor;
+                    $queue->enqueue($newPath);
+                }
+            }
+        }
     }
 }
