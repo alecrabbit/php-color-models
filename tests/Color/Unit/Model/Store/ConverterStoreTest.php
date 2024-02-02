@@ -34,12 +34,10 @@ final class ConverterStoreTest extends TestCase
     private function getTesteeInstance(
         ?ArrayObject $models = null,
         ?ArrayObject $graph = null,
-        ?IChainConverterBuilder $chainConverterBuilder = null
     ): IConverterStore {
         return new ConverterStore(
             models: $models ?? new ArrayObject(),
             graph: $graph ?? new ArrayObject(),
-            chainConverterBuilder: $chainConverterBuilder ?? $this->getChainConverterBuilderMock(),
         );
     }
 

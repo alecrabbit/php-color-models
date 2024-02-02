@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Store;
 
-use AlecRabbit\Color\Model\Contract\Converter\Builder\IChainConverterBuilder;
+use AlecRabbit\Color\Model\Contract\Converter\Factory\IChainConverterFactory;
 use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Contract\Store\IConverterStore;
-use AlecRabbit\Color\Model\Converter\Builder\ChainConverterBuilder;
+use AlecRabbit\Color\Model\Converter\Factory\ChainConverterFactory;
 use AlecRabbit\Color\Model\Exception\InvalidArgument;
 use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
 use ArrayObject;
@@ -20,13 +20,13 @@ final class ConverterStore implements IConverterStore
 {
     /** @var Array<class-string<IModelConverter>> */
     private static array $modelConverters = [];
+
     private readonly ArrayObject $models;
     private readonly ArrayObject $graph;
 
     public function __construct(
         ArrayObject $models = new ArrayObject(),
         ArrayObject $graph = new ArrayObject(),
-        private readonly IChainConverterBuilder $chainConverterBuilder = new ChainConverterBuilder(),
     ) {
         $this->models = $models;
         $this->graph = $graph;
@@ -132,19 +132,12 @@ final class ConverterStore implements IConverterStore
      */
     private function createColorConverter(Traversable $conversionPath): IConverter
     {
-        return $this->chainConverterBuilder
-            ->withConverters($this->getModelConverters())
-            ->withPath($conversionPath)
-            ->build()
-        ;
+        return $this->getChainConverterFactory()->create($conversionPath);
     }
 
-    /**
-     * @return Traversable<class-string<IModelConverter>>
-     */
-    private function getModelConverters(): Traversable
+    protected function getChainConverterFactory(): IChainConverterFactory
     {
-        yield from self::$modelConverters;
+        return new ChainConverterFactory(modelConverters: $this->getModelConverters());
     }
 
     /**
@@ -185,5 +178,13 @@ final class ConverterStore implements IConverterStore
                 }
             }
         }
+    }
+
+    /**
+     * @return Traversable<class-string<IModelConverter>>
+     */
+    private function getModelConverters(): Traversable
+    {
+        yield from self::$modelConverters;
     }
 }
