@@ -8,6 +8,8 @@ use AlecRabbit\Color\Model\Converter\CMYToRGBModelConverter;
 use AlecRabbit\Color\Model\Converter\HSLToRGBModelConverter;
 use AlecRabbit\Color\Model\Converter\RGBToCMYModelConverter;
 use AlecRabbit\Color\Model\Converter\RGBToHSLModelConverter;
+use AlecRabbit\Color\Model\Converter\RGBToXYZModelConverter;
+use AlecRabbit\Color\Model\Converter\XYZToRGBModelConverter;
 use AlecRabbit\Color\Model\Store\ConverterStore;
 
 // @codeCoverageIgnoreStart
@@ -19,6 +21,8 @@ ConverterStore::add(
     HSLToRGBModelConverter::class,
     RGBToCMYModelConverter::class,
     RGBToHSLModelConverter::class,
+    RGBToXYZModelConverter::class,
+    XYZToRGBModelConverter::class
 );
 
 // @codeCoverageIgnoreEnd
