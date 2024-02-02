@@ -123,6 +123,7 @@ final class ConverterStore implements IConverterStore
         return $this->createColorConverter(
             $this->findConversionPath($from, $to)
         );
+//        return (new ConverterGetter($this->getModelConverters()))->get($from, $to);
     }
 
     /**
