@@ -6,6 +6,7 @@ namespace AlecRabbit\Tests\Color\Unit\Model;
 
 
 use AlecRabbit\Color\Model\Contract\IColorModel;
+use AlecRabbit\Color\Model\Contract\IModelRGB;
 use AlecRabbit\Color\Model\DTO\DRGB;
 use AlecRabbit\Color\Model\ModelRGB;
 use AlecRabbit\Tests\TestCase\TestCase;
@@ -18,6 +19,7 @@ final class ModelRGBTest extends TestCase
     {
         $model = $this->getTesteeInstance();
 
+        self::assertInstanceOf(IModelRGB::class, $model);
         self::assertInstanceOf(ModelRGB::class, $model);
         self::assertEquals(DRGB::class, $model->dtoType());
     }

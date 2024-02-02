@@ -6,26 +6,26 @@ namespace AlecRabbit\Tests\Color\Unit\Model;
 
 
 use AlecRabbit\Color\Model\Contract\IColorModel;
-use AlecRabbit\Color\Model\Contract\IModelCMY;
-use AlecRabbit\Color\Model\DTO\DCMY;
-use AlecRabbit\Color\Model\ModelCMY;
+use AlecRabbit\Color\Model\Contract\IModelXYZ;
+use AlecRabbit\Color\Model\DTO\DXYZ;
+use AlecRabbit\Color\Model\ModelXYZ;
 use AlecRabbit\Tests\TestCase\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
-final class ModelCMYTest extends TestCase
+final class ModelXYZTest extends TestCase
 {
     #[Test]
     public function returnsCorrectDtoType(): void
     {
         $model = $this->getTesteeInstance();
 
-        self::assertInstanceOf(IModelCMY::class, $model);
-        self::assertInstanceOf(ModelCMY::class, $model);
-        self::assertEquals(DCMY::class, $model->dtoType());
+        self::assertInstanceOf(IModelXYZ::class, $model);
+        self::assertInstanceOf(ModelXYZ::class, $model);
+        self::assertEquals(DXYZ::class, $model->dtoType());
     }
 
     private function getTesteeInstance(): IColorModel
     {
-        return new ModelCMY();
+        return new ModelXYZ();
     }
 }

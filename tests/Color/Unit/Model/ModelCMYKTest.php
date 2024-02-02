@@ -6,6 +6,7 @@ namespace AlecRabbit\Tests\Color\Unit\Model;
 
 
 use AlecRabbit\Color\Model\Contract\IColorModel;
+use AlecRabbit\Color\Model\Contract\IModelCMYK;
 use AlecRabbit\Color\Model\DTO\DCMYK;
 use AlecRabbit\Color\Model\ModelCMYK;
 use AlecRabbit\Tests\TestCase\TestCase;
@@ -18,6 +19,7 @@ final class ModelCMYKTest extends TestCase
     {
         $model = $this->getTesteeInstance();
 
+        self::assertInstanceOf(IModelCMYK::class, $model);
         self::assertInstanceOf(ModelCMYK::class, $model);
         self::assertEquals(DCMYK::class, $model->dtoType());
     }
