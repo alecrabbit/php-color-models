@@ -23,31 +23,12 @@ final class ConverterStore implements IConverterStore
     /** @var Array<class-string<IModelConverter>> */
     private static array $modelConverters = [];
 
-    private readonly ArrayObject $models;
-    private readonly ArrayObject $graph;
-
-    public function __construct(
-        ArrayObject $models = new ArrayObject(),
-        ArrayObject $graph = new ArrayObject(),
-    ) {
-        $this->models = $models;
-        $this->graph = $graph;
-
-        $this->initialize();
-    }
-
-    private function initialize(): void
+    public static function add(string ...$classes): void
     {
-        $this->buildModels();
-        $this->buildGraph();
-    }
+        foreach ($classes as $class) {
+            self::assertClass($class);
 
-    private function buildModels(): void
-    {
-        /** @var class-string<IModelConverter> $class */
-        foreach (self::$modelConverters as $class) {
-            $this->models->offsetSet(self::extractFrom($class), true);
-            $this->models->offsetSet(self::extractTo($class), true);
+            self::$modelConverters[self::createKey($class)] = $class;
         }
     }
 
@@ -69,31 +50,12 @@ final class ConverterStore implements IConverterStore
         return $class::to()::class;
     }
 
-    private function buildGraph(): void
+    /**
+     * @param class-string<IModelConverter> $class
+     */
+    private static function createKey(string $class): string
     {
-        /** @var class-string<IColorModel> $model */
-        foreach ($this->models as $model => $_) {
-            $this->graph->offsetSet($model, []);
-        }
-
-        /** @var class-string<IModelConverter> $class */
-        foreach (self::$modelConverters as $class) {
-            $from = self::extractFrom($class);
-
-            /** @var array $value */
-            $value = $this->graph->offsetGet($from);
-            $value[] = self::extractTo($class);
-            $this->graph->offsetSet($from, $value);
-        }
-    }
-
-    public static function add(string ...$classes): void
-    {
-        foreach ($classes as $class) {
-            self::assertClass($class);
-
-            self::$modelConverters[self::createKey($class)] = $class;
-        }
+        return self::extractFrom($class) . '::' . self::extractTo($class);
     }
 
     /**
@@ -112,19 +74,8 @@ final class ConverterStore implements IConverterStore
         }
     }
 
-    /**
-     * @param class-string<IModelConverter> $class
-     */
-    private static function createKey(string $class): string
-    {
-        return self::extractFrom($class) . '::' . self::extractTo($class);
-    }
-
     public function getConverter(IColorModel $from, IColorModel $to): IConverter
     {
-//        return $this->createColorConverter(
-//            $this->findConversionPath($from, $to)
-//        );
         return $this->createConverterGetter()->get($from, $to);
     }
 
@@ -135,61 +86,6 @@ final class ConverterStore implements IConverterStore
             converterFactoryBuilder: new ChainConverterFactoryBuilder(),
             conversionPathFinderBuilder: new ConversionPathFinderBuilder(),
         );
-    }
-
-    /**
-     * @param Traversable<class-string<IColorModel>> $conversionPath
-     *
-     * @throws UnsupportedModelConversion
-     */
-    private function createColorConverter(Traversable $conversionPath): IConverter
-    {
-        return $this->getChainConverterFactory()->create($conversionPath);
-    }
-
-    protected function getChainConverterFactory(): IChainConverterFactory
-    {
-        return new ChainConverterFactory(modelConverters: $this->getModelConverters());
-    }
-
-    /**
-     * @param IColorModel $from
-     * @param IColorModel $to
-     *
-     * @return Traversable<class-string<IColorModel>>
-     */
-    private function findConversionPath(IColorModel $from, IColorModel $to): Traversable
-    {
-        $visited = [];
-        $queue = new SplQueue();
-
-        $fromClass = $from::class;
-        $toClass = $to::class;
-
-        $queue->enqueue([$fromClass]);
-        $visited[$fromClass] = true;
-
-        while (!$queue->isEmpty()) {
-            /** @var Array<class-string<IColorModel>> $path */
-            $path = $queue->dequeue();
-            $node = end($path);
-
-            if ($node === $toClass) {
-                yield from $path;
-            }
-
-            $neighbours = $this->graph[$node] ?? [];
-
-            /** @var class-string<IColorModel> $neighbor */
-            foreach ($neighbours as $neighbor) {
-                if (!isset($visited[$neighbor])) {
-                    $visited[$neighbor] = true;
-                    $newPath = $path;
-                    $newPath[] = $neighbor;
-                    $queue->enqueue($newPath);
-                }
-            }
-        }
     }
 
     /**

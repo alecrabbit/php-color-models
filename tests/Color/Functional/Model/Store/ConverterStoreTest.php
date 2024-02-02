@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace AlecRabbit\Tests\Color\Functional\Model\Store;
 
 
-use AlecRabbit\Color\Model\Contract\Converter\Builder\IChainConverterBuilder;
 use AlecRabbit\Color\Model\Contract\Store\IConverterStore;
-use AlecRabbit\Color\Model\Converter\Builder\ChainConverterBuilder;
 use AlecRabbit\Color\Model\Converter\CMYKToCMYModelConverter;
 use AlecRabbit\Color\Model\Converter\CMYToCMYKModelConverter;
 use AlecRabbit\Color\Model\Converter\CMYToRGBModelConverter;
@@ -20,7 +18,6 @@ use AlecRabbit\Color\Model\ModelCMY;
 use AlecRabbit\Color\Model\ModelHSL;
 use AlecRabbit\Color\Model\Store\ConverterStore;
 use AlecRabbit\Tests\TestCase\TestCase;
-use ArrayObject;
 use PHPUnit\Framework\Attributes\Test;
 
 final class ConverterStoreTest extends TestCase
@@ -36,14 +33,9 @@ final class ConverterStoreTest extends TestCase
         self::assertInstanceOf(ConverterStore::class, $store);
     }
 
-    private function getTesteeInstance(
-        ?ArrayObject $models = null,
-        ?ArrayObject $graph = null,
-    ): IConverterStore {
-        return new ConverterStore(
-            models: $models ?? new ArrayObject(),
-            graph: $graph ?? new ArrayObject(),
-        );
+    private function getTesteeInstance(): IConverterStore
+    {
+        return new ConverterStore();
     }
 
     #[Test]
