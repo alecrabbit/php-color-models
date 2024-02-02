@@ -9,12 +9,17 @@ use AlecRabbit\Color\Model\Contract\IColorModel;
 
 final readonly class KeyCreator implements IKeyCreator
 {
+    public function __construct(
+        private string $glue = '::',
+    ) {
+    }
+
     /**
      * @param class-string<IModelConverter> $class
      */
     public function create(string $class): string
     {
-        return $this->extractFrom($class) . '::' . $this->extractTo($class);
+        return $this->extractFrom($class) . $this->glue . $this->extractTo($class);
     }
 
     /**
