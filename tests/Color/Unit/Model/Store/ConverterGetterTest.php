@@ -15,6 +15,7 @@ use AlecRabbit\Color\Model\Store\IConversionPathFinderBuilder;
 use AlecRabbit\Tests\TestCase\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Traversable;
 
 final class ConverterGetterTest extends TestCase
 {
@@ -26,7 +27,7 @@ final class ConverterGetterTest extends TestCase
     }
 
     private function getTesteeInstance(
-        ?\Traversable $modelConverters = null,
+        ?Traversable $modelConverters = null,
         ?IConverterFactoryBuilder $chainConverterFactoryBuilder = null,
         ?IConversionPathFinderBuilder $conversionPathFinderBuilder = null,
     ): IConverterGetter {
@@ -37,9 +38,9 @@ final class ConverterGetterTest extends TestCase
         );
     }
 
-    private function getTraversableMock(): MockObject&\Traversable
+    private function getTraversableMock(): MockObject&Traversable
     {
-        return $this->createMock(\Traversable::class);
+        return $this->createMock(Traversable::class);
     }
 
     private function getConverterFactoryBuilderMock(): MockObject&IConverterFactoryBuilder

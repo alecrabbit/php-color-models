@@ -13,7 +13,6 @@ use AlecRabbit\Tests\Color\Unit\Model\Converter\Override\ModelConverterOverrideO
 use AlecRabbit\Tests\Color\Unit\Model\Converter\Override\ModelConverterOverrideOneOverride;
 use AlecRabbit\Tests\Color\Unit\Model\Converter\Override\ModelConverterOverrideTwo;
 use AlecRabbit\Tests\TestCase\TestCase;
-use ArrayObject;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
@@ -31,15 +30,9 @@ final class ConverterStoreTest extends TestCase
         self::assertInstanceOf(ConverterStore::class, $store);
     }
 
-    private function getTesteeInstance(
-    ): IConverterStore {
-        return new ConverterStore(
-        );
-    }
-
-    protected function getChainConverterBuilderMock(): MockObject&IChainConverterBuilder
+    private function getTesteeInstance(): IConverterStore
     {
-        return $this->createMock(IChainConverterBuilder::class);
+        return new ConverterStore();
     }
 
     #[Test]
@@ -109,6 +102,11 @@ final class ConverterStoreTest extends TestCase
         );
 
         ConverterStore::add($class);
+    }
+
+    protected function getChainConverterBuilderMock(): MockObject&IChainConverterBuilder
+    {
+        return $this->createMock(IChainConverterBuilder::class);
     }
 
     protected function setUp(): void

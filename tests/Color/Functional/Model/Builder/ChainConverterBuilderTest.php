@@ -84,6 +84,20 @@ final class ChainConverterBuilderTest extends TestCase
         self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
     }
 
+    private function getModelConverters(): Traversable
+    {
+        return new ArrayObject(
+            [
+                CMYKToCMYModelConverter::class,
+                CMYToCMYKModelConverter::class,
+                CMYToRGBModelConverter::class,
+                HSLToRGBModelConverter::class,
+                RGBToCMYModelConverter::class,
+                RGBToHSLModelConverter::class,
+            ],
+        );
+    }
+
     #[Test]
     public function canBuildWithCallsInDifferentOrder(): void
     {
@@ -109,20 +123,6 @@ final class ChainConverterBuilderTest extends TestCase
 
         self::assertInstanceOf(DCMY::class, $actual);
         self::assertEquals(new DCMY(1, 1, 1, 1), $actual);
-    }
-
-    private function getModelConverters(): Traversable
-    {
-        return new ArrayObject(
-            [
-                CMYKToCMYModelConverter::class,
-                CMYToCMYKModelConverter::class,
-                CMYToRGBModelConverter::class,
-                HSLToRGBModelConverter::class,
-                RGBToCMYModelConverter::class,
-                RGBToHSLModelConverter::class,
-            ],
-        );
     }
 
     #[Test]

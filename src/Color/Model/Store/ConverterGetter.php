@@ -46,7 +46,7 @@ final readonly class ConverterGetter implements IConverterGetter
         ;
     }
 
-    private function findConversionPath(IColorModel $from, IColorModel $to): \Traversable
+    private function findConversionPath(IColorModel $from, IColorModel $to): Traversable
     {
         return $this->getConversionPathFinder()->findPath($from, $to);
     }
@@ -55,6 +55,7 @@ final readonly class ConverterGetter implements IConverterGetter
     {
         return $this->conversionPathFinderBuilder
             ->withConverters($this->modelConverters)
-            ->build();
+            ->build()
+        ;
     }
 }

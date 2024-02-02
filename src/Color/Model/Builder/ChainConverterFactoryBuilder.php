@@ -9,6 +9,7 @@ use AlecRabbit\Builder\Dummy\IDummy;
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IConverterFactoryBuilder;
 use AlecRabbit\Color\Model\Contract\Converter\Factory\IChainConverterFactory;
 use AlecRabbit\Color\Model\Converter\Factory\ChainConverterFactory;
+use LogicException;
 use Traversable;
 
 final class ChainConverterFactoryBuilder implements IConverterFactoryBuilder
@@ -21,7 +22,7 @@ final class ChainConverterFactoryBuilder implements IConverterFactoryBuilder
     public function build(): IChainConverterFactory
     {
         if ($this->modelConverters instanceof IDummy) {
-            throw new \LogicException('Model converters are not set.');
+            throw new LogicException('Model converters are not set.');
         }
 
         return new ChainConverterFactory($this->modelConverters);

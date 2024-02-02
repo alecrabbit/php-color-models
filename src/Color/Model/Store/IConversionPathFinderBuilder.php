@@ -14,5 +14,5 @@ interface IConversionPathFinderBuilder
     /**
      * @param Traversable<class-string<IModelConverter>> $converters
      */
-    public function withConverters(Traversable $converters):  IConversionPathFinderBuilder;
+    public function withConverters(Traversable $converters): IConversionPathFinderBuilder;
 }

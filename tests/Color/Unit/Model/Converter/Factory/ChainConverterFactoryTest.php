@@ -12,6 +12,7 @@ use AlecRabbit\Color\Model\Converter\Factory\ChainConverterFactory;
 use AlecRabbit\Tests\TestCase\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Traversable;
 
 final class ChainConverterFactoryTest extends TestCase
 {
@@ -23,7 +24,7 @@ final class ChainConverterFactoryTest extends TestCase
     }
 
     private function getTesteeInstance(
-        \Traversable $modelConverters = null,
+        Traversable $modelConverters = null,
         IChainConverterBuilder $chainConverterBuilder = null,
     ): IChainConverterFactory {
         return new ChainConverterFactory(
@@ -32,9 +33,9 @@ final class ChainConverterFactoryTest extends TestCase
         );
     }
 
-    private function getTraversableMock(): MockObject&\Traversable
+    private function getTraversableMock(): MockObject&Traversable
     {
-        return $this->createMock(\Traversable::class);
+        return $this->createMock(Traversable::class);
     }
 
     private function getChainConverterBuilderMock(): MockObject&IChainConverterBuilder

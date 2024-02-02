@@ -6,16 +6,12 @@ namespace AlecRabbit\Color\Model\Store;
 
 use AlecRabbit\Color\Model\Builder\ChainConverterFactoryBuilder;
 use AlecRabbit\Color\Model\Builder\ConversionPathFinderBuilder;
-use AlecRabbit\Color\Model\Contract\Converter\Factory\IChainConverterFactory;
 use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Contract\Store\IConverterStore;
-use AlecRabbit\Color\Model\Converter\Factory\ChainConverterFactory;
 use AlecRabbit\Color\Model\Exception\InvalidArgument;
-use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
 use ArrayObject;
-use SplQueue;
 use Traversable;
 
 final class ConverterStore implements IConverterStore
@@ -25,12 +21,10 @@ final class ConverterStore implements IConverterStore
 
     public static function add(string ...$classes): void
     {
-        $keyCreator = new KeyCreator();
-
         foreach ($classes as $class) {
             self::assertClass($class);
 
-            self::$modelConverters[$keyCreator->create($class)] = $class;
+            self::$modelConverters[self::createKey($class)] = $class;
         }
     }
 
@@ -48,6 +42,13 @@ final class ConverterStore implements IConverterStore
                 )
             );
         }
+    }
+
+    protected static function createKey(string $class): string
+    {
+        static $keyCreator = new KeyCreator();
+
+        return $keyCreator->create($class);
     }
 
     public function getConverter(IColorModel $from, IColorModel $to): IConverter
@@ -69,6 +70,6 @@ final class ConverterStore implements IConverterStore
      */
     private function getModelConverters(): Traversable
     {
-        return new \ArrayObject(self::$modelConverters);
+        return new ArrayObject(self::$modelConverters);
     }
 }

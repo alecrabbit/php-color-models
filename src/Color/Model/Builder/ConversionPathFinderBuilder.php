@@ -9,6 +9,7 @@ use AlecRabbit\Builder\Dummy\IDummy;
 use AlecRabbit\Color\Model\Store\ConversionPathFinder;
 use AlecRabbit\Color\Model\Store\IConversionPathFinder;
 use AlecRabbit\Color\Model\Store\IConversionPathFinderBuilder;
+use LogicException;
 use Traversable;
 
 final class ConversionPathFinderBuilder implements IConversionPathFinderBuilder
@@ -22,7 +23,7 @@ final class ConversionPathFinderBuilder implements IConversionPathFinderBuilder
     public function build(): IConversionPathFinder
     {
         if ($this->modelConverters instanceof IDummy) {
-            throw new \LogicException('Model converters are not set.');
+            throw new LogicException('Model converters are not set.');
         }
 
         return new ConversionPathFinder($this->modelConverters);

@@ -8,7 +8,6 @@ use AlecRabbit\Color\Model\Contract\Converter\IChainConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Exception\ConverterNotFound;
-use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
 use Traversable;
 
 interface IChainConverterBuilder

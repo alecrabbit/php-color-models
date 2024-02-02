@@ -19,6 +19,7 @@ use AlecRabbit\Tests\TestCase\TestCase;
 use ArrayObject;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Traversable;
 
 final class ConversionPathFinderTest extends TestCase
 {
@@ -30,7 +31,7 @@ final class ConversionPathFinderTest extends TestCase
     }
 
     private function getTesteeInstance(
-        ?\Traversable $modelConverters = null,
+        ?Traversable $modelConverters = null,
         ?ArrayObject $models = null,
         ?ArrayObject $graph = null,
     ): IConversionPathFinder {
@@ -41,9 +42,9 @@ final class ConversionPathFinderTest extends TestCase
         );
     }
 
-    private function getTraversableMock(): MockObject&\Traversable
+    private function getTraversableMock(): MockObject&Traversable
     {
-        return $this->createMock(\Traversable::class);
+        return $this->createMock(Traversable::class);
     }
 
     #[Test]
@@ -70,9 +71,9 @@ final class ConversionPathFinderTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
-    private function getModelConverters(): \ArrayObject
+    private function getModelConverters(): ArrayObject
     {
-        return new \ArrayObject([
+        return new ArrayObject([
             CMYKToCMYModelConverter::class,
             CMYToCMYKModelConverter::class,
             CMYToRGBModelConverter::class,

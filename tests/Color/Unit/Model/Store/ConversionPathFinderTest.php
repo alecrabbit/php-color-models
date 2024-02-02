@@ -12,6 +12,7 @@ use AlecRabbit\Tests\TestCase\TestCase;
 use ArrayObject;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Traversable;
 
 final class ConversionPathFinderTest extends TestCase
 {
@@ -23,7 +24,7 @@ final class ConversionPathFinderTest extends TestCase
     }
 
     private function getTesteeInstance(
-        ?\Traversable $modelConverters = null,
+        ?Traversable $modelConverters = null,
         ?ArrayObject $models = null,
         ?ArrayObject $graph = null,
     ): IConversionPathFinder {
@@ -32,6 +33,16 @@ final class ConversionPathFinderTest extends TestCase
             models: $models ?? $this->getArrayObjectMock(),
             graph: $graph ?? $this->getArrayObjectMock(),
         );
+    }
+
+    private function getTraversableMock(): MockObject&Traversable
+    {
+        return $this->createMock(Traversable::class);
+    }
+
+    private function getArrayObjectMock(): MockObject&ArrayObject
+    {
+        return $this->createMock(ArrayObject::class);
     }
 
     #[Test]
@@ -54,7 +65,7 @@ final class ConversionPathFinderTest extends TestCase
         $graph = new ArrayObject();
 
         $finder = $this->getTesteeInstance(
-            modelConverters: new \ArrayObject($modelConverters),
+            modelConverters: new ArrayObject($modelConverters),
             models: $models,
             graph: $graph,
         );
@@ -89,7 +100,7 @@ final class ConversionPathFinderTest extends TestCase
         $graph = new ArrayObject();
 
         $finder = $this->getTesteeInstance(
-            modelConverters: new \ArrayObject($modelConverters),
+            modelConverters: new ArrayObject($modelConverters),
             models: $models,
             graph: $graph,
         );
@@ -109,15 +120,5 @@ final class ConversionPathFinderTest extends TestCase
 
         self::assertContains($classTwo::to()::class, $graph[$classTwo::from()::class]);
         self::assertNotContains($classTwo::from()::class, $graph[$classTwo::from()::class]);
-    }
-
-    private function getTraversableMock(): MockObject&\Traversable
-    {
-        return $this->createMock(\Traversable::class);
-    }
-
-    private function getArrayObjectMock(): MockObject&ArrayObject
-    {
-        return $this->createMock(ArrayObject::class);
     }
 }

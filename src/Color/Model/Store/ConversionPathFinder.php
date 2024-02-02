@@ -8,6 +8,7 @@ use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use ArrayObject;
 use SplQueue;
+use Traversable;
 
 final readonly class ConversionPathFinder implements IConversionPathFinder
 {
@@ -15,7 +16,7 @@ final readonly class ConversionPathFinder implements IConversionPathFinder
     private ArrayObject $graph;
 
     public function __construct(
-        private \Traversable $modelConverters,
+        private Traversable $modelConverters,
         ArrayObject $models = new ArrayObject(),
         ArrayObject $graph = new ArrayObject(),
         private IKeyCreator $keyCreator = new KeyCreator(),
@@ -67,7 +68,7 @@ final readonly class ConversionPathFinder implements IConversionPathFinder
         }
     }
 
-    public function findPath(IColorModel $from, IColorModel $to): \Traversable
+    public function findPath(IColorModel $from, IColorModel $to): Traversable
     {
         $visited = [];
         $queue = new SplQueue();

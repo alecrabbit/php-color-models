@@ -8,6 +8,8 @@ use AlecRabbit\Color\Model\Builder\ConversionPathFinderBuilder;
 use AlecRabbit\Color\Model\Store\ConversionPathFinder;
 use AlecRabbit\Color\Model\Store\IConversionPathFinderBuilder;
 use AlecRabbit\Tests\TestCase\TestCase;
+use ArrayObject;
+use LogicException;
 use PHPUnit\Framework\Attributes\Test;
 
 final class ConversionPathFinderBuilderTest extends TestCase
@@ -30,7 +32,7 @@ final class ConversionPathFinderBuilderTest extends TestCase
         $builder = $this->getTesteeInstance();
 
         $finder = $builder
-            ->withConverters(new \ArrayObject())
+            ->withConverters(new ArrayObject())
             ->build()
         ;
         self::assertInstanceOf(ConversionPathFinder::class, $finder);
@@ -39,7 +41,7 @@ final class ConversionPathFinderBuilderTest extends TestCase
     #[Test]
     public function throwsIfModelConvertersIsNotSet(): void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Model converters are not set.');
 
         $builder = $this->getTesteeInstance();

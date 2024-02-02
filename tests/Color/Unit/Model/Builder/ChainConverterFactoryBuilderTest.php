@@ -8,6 +8,8 @@ use AlecRabbit\Color\Model\Builder\ChainConverterFactoryBuilder;
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IConverterFactoryBuilder;
 use AlecRabbit\Color\Model\Converter\Factory\ChainConverterFactory;
 use AlecRabbit\Tests\TestCase\TestCase;
+use ArrayObject;
+use LogicException;
 use PHPUnit\Framework\Attributes\Test;
 
 final class ChainConverterFactoryBuilderTest extends TestCase
@@ -30,7 +32,7 @@ final class ChainConverterFactoryBuilderTest extends TestCase
         $builder = $this->getTesteeInstance();
 
         $factory = $builder
-            ->withConverters(new \ArrayObject())
+            ->withConverters(new ArrayObject())
             ->build()
         ;
         self::assertInstanceOf(ChainConverterFactory::class, $factory);
@@ -39,7 +41,7 @@ final class ChainConverterFactoryBuilderTest extends TestCase
     #[Test]
     public function throwsIfModelConvertersIsNotSet(): void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Model converters are not set.');
 
         $builder = $this->getTesteeInstance();
