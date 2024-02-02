@@ -12,6 +12,7 @@ use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Converter\ChainConverter;
+use AlecRabbit\Color\Model\Exception\ConverterNotFound;
 use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
 use ArrayObject;
 use LogicException;
@@ -54,7 +55,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
      * @param Traversable<class-string<IColorModel>> $conversionPath
      *
      * @return Traversable<class-string<IConverter>>
-     * @throws UnsupportedModelConversion
+     * @throws ConverterNotFound
      */
     private function getConvertersChain(Traversable $conversionPath): Traversable
     {
@@ -103,7 +104,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
      * @param class-string<IColorModel> $current
      *
      * @return class-string<IConverter>
-     * @throws UnsupportedModelConversion
+     * @throws ConverterNotFound
      */
     private function getConverterClass(string $previous, string $current): string
     {
@@ -117,7 +118,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
             }
         }
 
-        throw new UnsupportedModelConversion(
+        throw new ConverterNotFound(
             sprintf(
                 'Converter from "%s" to "%s" not found.',
                 $previous,
@@ -126,9 +127,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
         );
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function withPath(Traversable $conversionPath): IChainConverterBuilder
     {
         $clone = clone $this;
@@ -136,9 +135,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
         return $clone;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function withConverters(iterable $converters): IChainConverterBuilder
     {
         $clone = clone $this;
