@@ -18,6 +18,7 @@ final readonly class ConversionPathFinder implements IConversionPathFinder
         private \Traversable $modelConverters,
         ArrayObject $models = new ArrayObject(),
         ArrayObject $graph = new ArrayObject(),
+        private IKeyCreator $keyCreator = new KeyCreator(),
     ) {
         $this->models = $models;
         $this->graph = $graph;
@@ -36,8 +37,8 @@ final readonly class ConversionPathFinder implements IConversionPathFinder
     {
         /** @var class-string<IModelConverter> $class */
         foreach ($this->modelConverters as $class) {
-            $this->setModel(self::extractFrom($class));
-            $this->setModel(self::extractTo($class));
+            $this->setModel($this->keyCreator->extractFrom($class));
+            $this->setModel($this->keyCreator->extractTo($class));
         }
     }
 
@@ -46,26 +47,6 @@ final readonly class ConversionPathFinder implements IConversionPathFinder
         if (!$this->models->offsetExists($key)) {
             $this->models->offsetSet($key, true);
         }
-    }
-
-    /**
-     * @param class-string<IModelConverter> $class
-     * @return class-string<IColorModel>
-     */
-    protected static function extractFrom(
-        string $class
-    ): string {
-        return $class::from()::class;
-    }
-
-    /**
-     * @param class-string<IModelConverter> $class
-     * @return class-string<IColorModel>
-     */
-    protected static function extractTo(
-        string $class
-    ): string {
-        return $class::to()::class;
     }
 
     private function buildGraph(): void
@@ -77,11 +58,11 @@ final readonly class ConversionPathFinder implements IConversionPathFinder
 
         /** @var class-string<IModelConverter> $class */
         foreach ($this->modelConverters as $class) {
-            $from = self::extractFrom($class);
+            $from = $this->keyCreator->extractFrom($class);
 
             /** @var array $value */
             $value = $this->graph->offsetGet($from);
-            $value[] = self::extractTo($class);
+            $value[] = $this->keyCreator->extractTo($class);
             $this->graph->offsetSet($from, $value);
         }
     }

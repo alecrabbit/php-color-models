@@ -25,37 +25,13 @@ final class ConverterStore implements IConverterStore
 
     public static function add(string ...$classes): void
     {
+        $keyCreator = new KeyCreator();
+
         foreach ($classes as $class) {
             self::assertClass($class);
 
-            self::$modelConverters[self::createKey($class)] = $class;
+            self::$modelConverters[$keyCreator->create($class)] = $class;
         }
-    }
-
-    /**
-     * @param class-string<IModelConverter> $class
-     * @return class-string<IColorModel>
-     */
-    protected static function extractFrom(string $class): string
-    {
-        return $class::from()::class;
-    }
-
-    /**
-     * @param class-string<IModelConverter> $class
-     * @return class-string<IColorModel>
-     */
-    protected static function extractTo(string $class): string
-    {
-        return $class::to()::class;
-    }
-
-    /**
-     * @param class-string<IModelConverter> $class
-     */
-    private static function createKey(string $class): string
-    {
-        return self::extractFrom($class) . '::' . self::extractTo($class);
     }
 
     /**
