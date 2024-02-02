@@ -12,7 +12,7 @@ use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Converter\ChainConverter;
-use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
+use AlecRabbit\Color\Model\Exception\ConverterNotFound;
 use ArrayObject;
 use LogicException;
 use Traversable;
@@ -39,35 +39,15 @@ final class ChainConverterBuilder implements IChainConverterBuilder
 
     public function build(): IChainConverter
     {
+        $this->ensureConvertersCache();
+
         if ($this->conversionPath instanceof IDummy) {
             throw new LogicException('Path is not provided.');
         }
 
-        $this->ensureConvertersCache();
-
         return new ChainConverter(
             $this->getConvertersChain($this->conversionPath)
         );
-    }
-
-    /**
-     * @param Traversable<class-string<IColorModel>> $conversionPath
-     *
-     * @return Traversable<class-string<IConverter>>
-     * @throws UnsupportedModelConversion
-     */
-    private function getConvertersChain(Traversable $conversionPath): Traversable
-    {
-        $previous = null;
-        foreach ($conversionPath as $current) {
-            if ($previous === null) {
-                $previous = $current;
-                continue;
-            }
-
-            yield $this->getConverterClass($previous, $current);
-            $previous = $current;
-        }
     }
 
     private function ensureConvertersCache(): void
@@ -99,36 +79,56 @@ final class ChainConverterBuilder implements IChainConverterBuilder
     }
 
     /**
+     * @param Traversable<class-string<IColorModel>> $conversionPath
+     *
+     * @return Traversable<class-string<IConverter>>
+     * @throws ConverterNotFound
+     */
+    private function getConvertersChain(Traversable $conversionPath): Traversable
+    {
+        $previous = null;
+        foreach ($conversionPath as $current) {
+            if ($previous === null) {
+                $previous = $current;
+                continue;
+            }
+
+            yield $this->getConverterClass($previous, $current);
+            $previous = $current;
+        }
+    }
+
+    /**
      * @param class-string<IColorModel> $previous
      * @param class-string<IColorModel> $current
      *
      * @return class-string<IConverter>
-     * @throws UnsupportedModelConversion
+     * @throws ConverterNotFound
      */
     private function getConverterClass(string $previous, string $current): string
     {
-        /**
-         * @var string $key
-         * @var class-string<IModelConverter> $converter
-         */
-        foreach ($this->convertersCache as $key => $converter) {
-            if (self::concatKey($previous, $current) === $key) {
-                return $converter;
-            }
-        }
-
-        throw new UnsupportedModelConversion(
-            sprintf(
-                'Converter from "%s" to "%s" not found.',
-                $previous,
-                $current,
-            )
-        );
+        return $this->findConverterClass(self::concatKey($previous, $current))
+            ??
+            throw new ConverterNotFound(
+                sprintf(
+                    'Converter from "%s" to "%s" not found.',
+                    $previous,
+                    $current,
+                )
+            );
     }
 
     /**
-     * @inheritDoc
+     * @return null|class-string<IConverter>
      */
+    private function findConverterClass(string $concatKey): ?string
+    {
+        return $this->convertersCache->offsetExists($concatKey)
+            ? $this->convertersCache->offsetGet($concatKey)
+            : null;
+    }
+
+    /** @inheritDoc */
     public function withPath(Traversable $conversionPath): IChainConverterBuilder
     {
         $clone = clone $this;
@@ -136,9 +136,7 @@ final class ChainConverterBuilder implements IChainConverterBuilder
         return $clone;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function withConverters(iterable $converters): IChainConverterBuilder
     {
         $clone = clone $this;
