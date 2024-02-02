@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Converter\Core\A;
 
-use AlecRabbit\Color\Model\Contract\Converter\Core\IDCoreConverter;
+use AlecRabbit\Color\Model\Contract\Converter\Core\ICoreConverter;
 use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Exception\InvalidArgument;
 
-abstract readonly class ACoreConverter implements IDCoreConverter
+abstract readonly class ACoreConverter implements ICoreConverter
 {
     /** @var class-string<DColor> */
     protected string $inputType;

@@ -22,7 +22,7 @@ final readonly class RGBToHSLModelConverter extends AModelConverter
         return ModelHSL::class;
     }
 
-    protected static function getConverterClass(): string
+    protected static function getCoreConverterClass(): string
     {
         return RGBToHSL::class;
     }

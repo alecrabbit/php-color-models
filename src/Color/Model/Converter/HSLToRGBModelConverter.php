@@ -22,7 +22,7 @@ final readonly class HSLToRGBModelConverter extends AModelConverter
         return ModelRGB::class;
     }
 
-    protected static function getConverterClass(): string
+    protected static function getCoreConverterClass(): string
     {
         return HSLToRGB::class;
     }

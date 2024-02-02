@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Converter\Builder;
 
+use AlecRabbit\Builder\Dummy\Dummy;
+use AlecRabbit\Builder\Dummy\IDummy;
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IChainConverterBuilder;
 use AlecRabbit\Color\Model\Contract\Converter\IChainConverter;
-use AlecRabbit\Color\Model\Contract\Converter\IDColorConverter;
+use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
 use AlecRabbit\Color\Model\Contract\IColorModel;
 use AlecRabbit\Color\Model\Converter\ChainConverter;
-use AlecRabbit\Color\Model\Exception\UnsupportedModelConversion;
+use AlecRabbit\Color\Model\Exception\ConverterNotFound;
+use ArrayObject;
 use LogicException;
 use Traversable;
 
@@ -18,99 +21,46 @@ use function is_subclass_of;
 
 final class ChainConverterBuilder implements IChainConverterBuilder
 {
-    /** @var iterable<class-string<IDColorConverter>> */
-    private iterable $converters;
+    /** @var ArrayObject<string, class-string<IConverter>> */
+    private readonly ArrayObject $convertersCache;
 
-    /** @var iterable<class-string<IDColorConverter>> */
-    private iterable $convertersCache;
-
-    /** @var iterable<class-string<IDColorConverter>> */
-    private iterable $chainConverters;
+    /**
+     * @param Traversable<class-string<IConverter>>|IDummy $converters
+     * @param Traversable<class-string<IColorModel>>|IDummy $conversionPath
+     */
+    public function __construct(
+        private Traversable|IDummy $converters = new Dummy(),
+        private Traversable|IDummy $conversionPath = new Dummy(),
+        ArrayObject $convertersCache = new ArrayObject(),
+    ) {
+        /** @var ArrayObject<string, class-string<IConverter>> $convertersCache */
+        $this->convertersCache = $convertersCache;
+    }
 
     public function build(): IChainConverter
     {
-        $this->validate();
-
-        return new ChainConverter($this->chainConverters);
-    }
-
-    private function validate(): void
-    {
-        match (true) {
-            !isset($this->chainConverters) => throw new LogicException('Path is not provided.'),
-            !isset($this->converters) => throw new LogicException('Converters are not set.'),
-            default => null,
-        };
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function forPath(iterable $conversionPath): IChainConverterBuilder
-    {
-        $clone = clone $this;
-        $clone->chainConverters = $this->getChainConvertersFromPath($conversionPath);
-        return $clone;
-    }
-
-    /**
-     * @param iterable<class-string<IColorModel>> $conversionPath
-     *
-     * @return Traversable<class-string<IDColorConverter>>
-     * @throws UnsupportedModelConversion
-     */
-    private function getChainConvertersFromPath(iterable $conversionPath): Traversable
-    {
-        $prev = null;
-        foreach ($conversionPath as $model) {
-            if ($prev === null) {
-                $prev = $model;
-                continue;
-            }
-
-            yield $this->getConverterClass($prev, $model);
-            $prev = $model;
-        }
-    }
-
-    /**
-     * @param class-string<IColorModel> $prev
-     * @param class-string<IColorModel> $model
-     *
-     * @return class-string<IDColorConverter>
-     * @throws UnsupportedModelConversion
-     */
-    private function getConverterClass(string $prev, string $model): string
-    {
         $this->ensureConvertersCache();
 
-        /**
-         * @var string $key
-         * @var class-string<IModelConverter> $converter
-         */
-        foreach ($this->convertersCache as $key => $converter) {
-            if (self::concatKey($prev, $model) === $key) {
-                return $converter;
-            }
+        if ($this->conversionPath instanceof IDummy) {
+            throw new LogicException('Path is not provided.');
         }
 
-        throw new UnsupportedModelConversion(
-            sprintf(
-                'Converter from "%s" to "%s" not found.',
-                $prev,
-                $model,
-            )
+        return new ChainConverter(
+            $this->getConvertersChain($this->conversionPath)
         );
     }
 
     private function ensureConvertersCache(): void
     {
-        if (!isset($this->convertersCache)) {
-            $this->convertersCache = [];
-            foreach ($this->converters as $converter) {
-                if (is_subclass_of($converter, IModelConverter::class)) {
-                    $this->convertersCache[self::createKey($converter)] = $converter;
-                }
+        if ($this->converters instanceof IDummy) {
+            throw new LogicException('Converters are not set.');
+        }
+
+        /** @var class-string<IConverter> $converter */
+        foreach ($this->converters as $converter) {
+            if (is_subclass_of($converter, IModelConverter::class)) {
+                $key = self::createKey($converter);
+                $this->convertersCache->offsetSet($key, $converter);
             }
         }
     }
@@ -129,8 +79,64 @@ final class ChainConverterBuilder implements IChainConverterBuilder
     }
 
     /**
-     * @inheritDoc
+     * @param Traversable<class-string<IColorModel>> $conversionPath
+     *
+     * @return Traversable<class-string<IConverter>>
+     * @throws ConverterNotFound
      */
+    private function getConvertersChain(Traversable $conversionPath): Traversable
+    {
+        $previous = null;
+        foreach ($conversionPath as $current) {
+            if ($previous === null) {
+                $previous = $current;
+                continue;
+            }
+
+            yield $this->getConverterClass($previous, $current);
+            $previous = $current;
+        }
+    }
+
+    /**
+     * @param class-string<IColorModel> $previous
+     * @param class-string<IColorModel> $current
+     *
+     * @return class-string<IConverter>
+     * @throws ConverterNotFound
+     */
+    private function getConverterClass(string $previous, string $current): string
+    {
+        return $this->findConverterClass(self::concatKey($previous, $current))
+            ??
+            throw new ConverterNotFound(
+                sprintf(
+                    'Converter from "%s" to "%s" not found.',
+                    $previous,
+                    $current,
+                )
+            );
+    }
+
+    /**
+     * @return null|class-string<IConverter>
+     */
+    private function findConverterClass(string $concatKey): ?string
+    {
+        return $this->convertersCache->offsetExists($concatKey)
+            ? $this->convertersCache->offsetGet($concatKey)
+            : null;
+    }
+
+    /** @inheritDoc */
+    public function withPath(Traversable $conversionPath): IChainConverterBuilder
+    {
+        $clone = clone $this;
+        $clone->conversionPath = $conversionPath;
+        return $clone;
+    }
+
+    /** @inheritDoc */
     public function withConverters(iterable $converters): IChainConverterBuilder
     {
         $clone = clone $this;

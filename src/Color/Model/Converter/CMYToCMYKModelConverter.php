@@ -22,7 +22,7 @@ final readonly class CMYToCMYKModelConverter extends AModelConverter
         return ModelCMYK::class;
     }
 
-    protected static function getConverterClass(): string
+    protected static function getCoreConverterClass(): string
     {
         return CMYToCMYK::class;
     }

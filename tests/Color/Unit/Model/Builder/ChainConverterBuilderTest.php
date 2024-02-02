@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace AlecRabbit\Tests\Color\Unit\Model\Builder;
 
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IChainConverterBuilder;
+use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Converter\Builder\ChainConverterBuilder;
 use AlecRabbit\Tests\TestCase\TestCase;
 use ArrayObject;
 use LogicException;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 
 final class ChainConverterBuilderTest extends TestCase
 {
@@ -32,11 +34,20 @@ final class ChainConverterBuilderTest extends TestCase
         $builder = $this->getTesteeInstance();
 
         $converter = $builder
+            ->withPath(new ArrayObject())
             ->withConverters(new ArrayObject())
-            ->forPath(new ArrayObject())
-            ->build();
+            ->build()
+        ;
 
         self::assertInstanceOf(ChainConverterBuilder::class, $builder);
+
+        $color = $this->getColorMock();
+        self::assertSame($color, $converter->convert($color));
+    }
+
+    private function getColorMock(): MockObject&DColor
+    {
+        return $this->createMock(DColor::class);
     }
 
     #[Test]
@@ -48,8 +59,11 @@ final class ChainConverterBuilderTest extends TestCase
         $this->expectExceptionMessage('Converters are not set.');
 
         $builder
-            ->forPath(new ArrayObject())
-            ->build();
+            ->withPath(new ArrayObject())
+            ->build()
+        ;
+
+        self::fail('Exception was not thrown.');
     }
 
     #[Test]
@@ -62,6 +76,7 @@ final class ChainConverterBuilderTest extends TestCase
 
         $builder
             ->withConverters(new ArrayObject())
-            ->build();
+            ->build()
+        ;
     }
 }
