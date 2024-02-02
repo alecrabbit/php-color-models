@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Store;
 
+use AlecRabbit\Color\Model\Builder\ChainConverterFactoryBuilder;
+use AlecRabbit\Color\Model\Builder\ConversionPathFinderBuilder;
 use AlecRabbit\Color\Model\Contract\Converter\Factory\IChainConverterFactory;
 use AlecRabbit\Color\Model\Contract\Converter\IConverter;
 use AlecRabbit\Color\Model\Contract\Converter\IModelConverter;
@@ -120,10 +122,19 @@ final class ConverterStore implements IConverterStore
 
     public function getConverter(IColorModel $from, IColorModel $to): IConverter
     {
-        return $this->createColorConverter(
-            $this->findConversionPath($from, $to)
+//        return $this->createColorConverter(
+//            $this->findConversionPath($from, $to)
+//        );
+        return $this->createConverterGetter()->get($from, $to);
+    }
+
+    protected function createConverterGetter(): ConverterGetter
+    {
+        return new ConverterGetter(
+            modelConverters: $this->getModelConverters(),
+            converterFactoryBuilder: new ChainConverterFactoryBuilder(),
+            conversionPathFinderBuilder: new ConversionPathFinderBuilder(),
         );
-//        return (new ConverterGetter($this->getModelConverters()))->get($from, $to);
     }
 
     /**
@@ -186,6 +197,6 @@ final class ConverterStore implements IConverterStore
      */
     private function getModelConverters(): Traversable
     {
-        yield from self::$modelConverters;
+        return new \ArrayObject(self::$modelConverters);
     }
 }

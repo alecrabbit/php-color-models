@@ -11,7 +11,7 @@ use AlecRabbit\Color\Model\Contract\Converter\Factory\IChainConverterFactory;
 use AlecRabbit\Color\Model\Converter\Factory\ChainConverterFactory;
 use Traversable;
 
-final class ConverterFactoryBuilder implements IConverterFactoryBuilder
+final class ChainConverterFactoryBuilder implements IConverterFactoryBuilder
 {
     public function __construct(
         private Traversable|IDummy $modelConverters = new Dummy(),

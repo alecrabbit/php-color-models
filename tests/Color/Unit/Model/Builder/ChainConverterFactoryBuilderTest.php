@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Tests\Color\Unit\Model\Builder;
 
-use AlecRabbit\Color\Model\Builder\ConverterFactoryBuilder;
+use AlecRabbit\Color\Model\Builder\ChainConverterFactoryBuilder;
 use AlecRabbit\Color\Model\Contract\Converter\Builder\IConverterFactoryBuilder;
 use AlecRabbit\Color\Model\Converter\Factory\ChainConverterFactory;
 use AlecRabbit\Tests\TestCase\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
-final class ConverterFactoryBuilderTest extends TestCase
+final class ChainConverterFactoryBuilderTest extends TestCase
 {
     #[Test]
     public function canBeInstantiated(): void
     {
         $builder = $this->getTesteeInstance();
-        self::assertInstanceOf(ConverterFactoryBuilder::class, $builder);
+        self::assertInstanceOf(ChainConverterFactoryBuilder::class, $builder);
     }
 
     private function getTesteeInstance(): IConverterFactoryBuilder
     {
-        return new ConverterFactoryBuilder();
+        return new ChainConverterFactoryBuilder();
     }
 
     #[Test]
