@@ -21,9 +21,9 @@ final readonly class CMYToCMYK extends ACoreConverter
     {
         /** @var CMY $color */
         $k = min(
-            $color->cyan,
-            $color->magenta,
-            $color->yellow,
+            $color->c,
+            $color->m,
+            $color->y,
         );
 
         if ($k === 1.0) {
@@ -31,9 +31,9 @@ final readonly class CMYToCMYK extends ACoreConverter
         }
 
         return new CMYK(
-            round(($color->cyan - $k) / (1 - $k), $this->precision),
-            round(($color->magenta - $k) / (1 - $k), $this->precision),
-            round(($color->yellow - $k) / (1 - $k), $this->precision),
+            round(($color->c - $k) / (1 - $k), $this->precision),
+            round(($color->m - $k) / (1 - $k), $this->precision),
+            round(($color->y - $k) / (1 - $k), $this->precision),
             round($k, $this->precision),
             round($color->alpha, $this->precision),
         );

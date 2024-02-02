@@ -12,9 +12,9 @@ use AlecRabbit\Color\Model\Contract\DTO\DColor;
 final readonly class DRGB implements DColor
 {
     public function __construct(
-        public float $red,
-        public float $green,
-        public float $blue,
+        public float $r,
+        public float $g,
+        public float $b,
         public float $alpha = 1.0,
     ) {
     }

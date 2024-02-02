@@ -20,9 +20,9 @@ final readonly class RGBToXYZ extends ACoreConverter
     protected function doConvert(DColor $color): DColor
     {
         /** @var RGB $color */
-        $r = $this->gammaCorrection($color->red);
-        $g = $this->gammaCorrection($color->green);
-        $b = $this->gammaCorrection($color->blue);
+        $r = $this->gammaCorrection($color->r);
+        $g = $this->gammaCorrection($color->g);
+        $b = $this->gammaCorrection($color->b);
 
         $x = $r * 0.4124564 + $g * 0.3575761 + $b * 0.1804375;
         $y = $r * 0.2126729 + $g * 0.7151522 + $b * 0.0721750;

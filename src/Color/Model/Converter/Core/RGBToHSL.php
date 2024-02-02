@@ -20,9 +20,9 @@ final readonly class RGBToHSL extends ACoreConverter
     protected function doConvert(DColor $color): DColor
     {
         /** @var RGB $color */
-        $r = $color->red;
-        $g = $color->green;
-        $b = $color->blue;
+        $r = $color->r;
+        $g = $color->g;
+        $b = $color->b;
 
         $max = max($r, $g, $b);
         $min = min($r, $g, $b);

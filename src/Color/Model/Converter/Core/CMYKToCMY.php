@@ -21,9 +21,9 @@ final readonly class CMYKToCMY extends ACoreConverter
     {
         /** @var CMYK $color */
         return new CMY(
-            round($color->cyan * (1 - $color->black) + $color->black, $this->precision),
-            round($color->magenta * (1 - $color->black) + $color->black, $this->precision),
-            round($color->yellow * (1 - $color->black) + $color->black, $this->precision),
+            round($color->c * (1 - $color->k) + $color->k, $this->precision),
+            round($color->m * (1 - $color->k) + $color->k, $this->precision),
+            round($color->y * (1 - $color->k) + $color->k, $this->precision),
             round($color->alpha, $this->precision),
         );
     }

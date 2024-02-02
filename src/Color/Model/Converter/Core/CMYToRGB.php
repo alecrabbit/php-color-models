@@ -21,9 +21,9 @@ final readonly class CMYToRGB extends ACoreConverter
     {
         /** @var CMY $color */
         return new RGB(
-            round((1 - $color->cyan), $this->precision),
-            round((1 - $color->magenta), $this->precision),
-            round((1 - $color->yellow), $this->precision),
+            round((1 - $color->c), $this->precision),
+            round((1 - $color->m), $this->precision),
+            round((1 - $color->y), $this->precision),
             round($color->alpha, $this->precision),
         );
     }

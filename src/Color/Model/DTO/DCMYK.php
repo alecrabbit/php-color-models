@@ -12,10 +12,10 @@ use AlecRabbit\Color\Model\Contract\DTO\DColor;
 final readonly class DCMYK implements DColor
 {
     public function __construct(
-        public float $cyan,
-        public float $magenta,
-        public float $yellow,
-        public float $black,
+        public float $c,
+        public float $m,
+        public float $y,
+        public float $k,
         public float $alpha = 1.0,
     ) {
     }
