@@ -21,7 +21,8 @@ final class XYZToLABTest extends TestCase
         yield from [
             // [expected, incoming]
             [new DLAB(0, 0, 0), new DXYZ(0, 0, 0)],
-            [new DLAB(0.749012, 0.8, 0.639216), new DXYZ(0.5, 0.5, 0.5)],
+            [new DLAB(1, 0.0854, 0.0559), new DXYZ(1, 1, 1)],
+            [new DLAB(0.5, 0.8, 0.639216), new DXYZ(0.5, 0.5, 0.5)],
 //            [new DLAB(0.749012, -0.8, 0.639216), new DXYZ(0.331111, 0.48121, 0.264334)],
 //            [new DLAB(0.233, -0.8, -0.639216), new DXYZ(0.016474, 0.038887, 0.134961)],
 //            [new DLAB(0.729412, 0.368627, 0.270588), new DXYZ(0.253287, 0.188771, 0.079388)],
