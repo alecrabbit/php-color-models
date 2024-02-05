@@ -27,11 +27,15 @@ final readonly class LABToXYZ extends ACoreConverter
     protected function doConvert(DColor $color): DColor
     {
         /** @var LAB $color */
-        $l = ($color->l * 100 + 16.0) / 116.0;
+        $l = $color->l * 100; // 100 is a range coefficient
+        $a = $color->a * 127; // 127 is a range coefficient
+        $b = $color->b * 127;
 
-        $x = $this->illuminant->x * $this->correction($l + $color->a / 10.0);
-        $y = $this->illuminant->y * $this->correction($l);
-        $z = $this->illuminant->z * $this->correction($l - $color->b / 4.0);
+        $l_ = ($l + 16.0) / 116.0;
+
+        $x = $this->illuminant->x * $this->f($l_ + $a / 500);
+        $y = $this->illuminant->y * $this->f($l_);
+        $z = $this->illuminant->z * $this->f($l_ - $b / 200);
 
         return new XYZ(
             round($x, $this->precision),
@@ -41,11 +45,11 @@ final readonly class LABToXYZ extends ACoreConverter
         );
     }
 
-    protected function correction(float $v): float
+    protected function f(float $t): float
     {
-        return $v > self::DELTA
-            ? $v ** 3.0
-            : 3.0 * ($v - self::COEFFICIENT) * self::DELTA * self::DELTA;
+        return $t > self::DELTA
+            ? $t ** 3.0
+            : 3.0 * self::DELTA * self::DELTA * ($t - self::COEFFICIENT);
     }
 
 }
