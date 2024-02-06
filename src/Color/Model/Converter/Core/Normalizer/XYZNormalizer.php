@@ -5,28 +5,28 @@ declare(strict_types=1);
 namespace AlecRabbit\Color\Model\Converter\Core\Normalizer;
 
 use AlecRabbit\Color\Model\Contract\Converter\Core\IIlluminant;
-use AlecRabbit\Color\Model\Contract\Converter\Core\IXYZDenormalizer;
+use AlecRabbit\Color\Model\Contract\Converter\Core\IXYZNormalizer;
 use AlecRabbit\Color\Model\Converter\Core\Illuminant\D65Deg2;
 
-final readonly class XYZNormalizer implements IXYZDenormalizer
+final readonly class XYZNormalizer implements IXYZNormalizer
 {
     public function __construct(
         private IIlluminant $illuminant = new D65Deg2(),
     ) {
     }
 
-    public function denormalizeX(float $x): float
+    public function normalizeX(float $x): float
     {
-        return $x / $this->illuminant->referenceX();
+        return $x * $this->illuminant->referenceX();
     }
 
-    public function denormalizeY(float $y): float
+    public function normalizeY(float $y): float
     {
-        return $y / $this->illuminant->referenceY();
+        return $y * $this->illuminant->referenceY();
     }
 
-    public function denormalizeZ(float $z): float
+    public function normalizeZ(float $z): float
     {
-        return $z / $this->illuminant->referenceZ();
+        return $z * $this->illuminant->referenceZ();
     }
 }

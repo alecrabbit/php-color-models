@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Contract\Converter\Core;
 
-interface ILabNormalizer
+interface ILABNormalizer
 {
     public function normalizeL(float $l): float;
 

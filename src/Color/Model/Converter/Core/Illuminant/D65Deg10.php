@@ -16,10 +16,26 @@ final readonly class D65Deg10 implements IIlluminant
     private const YN = 1.0;
     private const ZN = 1.073_040;
 
+
     public function __construct(
-        public float $x = self::XN,
-        public float $y = self::YN,
-        public float $z = self::ZN,
+        private float $x = self::XN,
+        private float $y = self::YN,
+        private float $z = self::ZN,
     ) {
+    }
+
+    public function referenceX(): float
+    {
+        return $this->x;
+    }
+
+    public function referenceY(): float
+    {
+        return $this->y;
+    }
+
+    public function referenceZ(): float
+    {
+        return $this->z;
     }
 }

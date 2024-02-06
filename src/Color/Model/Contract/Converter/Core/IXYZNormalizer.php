@@ -6,9 +6,9 @@ namespace AlecRabbit\Color\Model\Contract\Converter\Core;
 
 interface IXYZNormalizer
 {
-    public function denormalizeX(float $x): float;
+    public function normalizeX(float $x): float;
 
-    public function denormalizeY(float $y): float;
+    public function normalizeY(float $y): float;
 
-    public function denormalizeZ(float $z): float;
+    public function normalizeZ(float $z): float;
 }

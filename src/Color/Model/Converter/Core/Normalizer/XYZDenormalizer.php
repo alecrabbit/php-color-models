@@ -4,26 +4,29 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Converter\Core\Normalizer;
 
+use AlecRabbit\Color\Model\Contract\Converter\Core\IIlluminant;
 use AlecRabbit\Color\Model\Contract\Converter\Core\IXYZDenormalizer;
+use AlecRabbit\Color\Model\Converter\Core\Illuminant\D65Deg2;
 
-class XYZDenormalizer implements IXYZDenormalizer
+final readonly class XYZDenormalizer implements IXYZDenormalizer
 {
+    public function __construct(
+        private IIlluminant $illuminant = new D65Deg2(),
+    ) {
+    }
 
     public function denormalizeX(float $x): float
     {
-        // TODO: Implement denormalizeX() method.
-        throw new \RuntimeException(__METHOD__ . ' Not implemented.');
+        return $x / $this->illuminant->referenceX();
     }
 
     public function denormalizeY(float $y): float
     {
-        // TODO: Implement denormalizeY() method.
-        throw new \RuntimeException(__METHOD__ . ' Not implemented.');
+        return $y / $this->illuminant->referenceY();
     }
 
     public function denormalizeZ(float $z): float
     {
-        // TODO: Implement denormalizeZ() method.
-        throw new \RuntimeException(__METHOD__ . ' Not implemented.');
+        return $z / $this->illuminant->referenceZ();
     }
 }

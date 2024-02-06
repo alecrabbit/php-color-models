@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Contract\Converter\Core;
 
-interface ILabDenormalizer
+interface ILABDenormalizer
 {
     public function denormalizeL(float $l): float;
 

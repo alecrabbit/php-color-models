@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Converter\Core\Normalizer;
 
-use AlecRabbit\Color\Model\Contract\Converter\Core\ILabDenormalizer;
+use AlecRabbit\Color\Model\Contract\Converter\Core\ILABDenormalizer;
 
-final readonly class LabDenormalizer implements ILabDenormalizer
+final readonly class LABDenormalizer implements ILABDenormalizer
 {
     public function denormalizeL(float $l): float
     {

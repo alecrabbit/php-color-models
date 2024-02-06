@@ -6,7 +6,7 @@ namespace AlecRabbit\Color\Model\Converter\Core\Normalizer;
 
 use AlecRabbit\Color\Model\Contract\Converter\Core\ILABNormalizer;
 
-final readonly class LabNormalizer implements ILABNormalizer
+final readonly class LABNormalizer implements ILABNormalizer
 {
     public function normalizeL(float $l): float
     {

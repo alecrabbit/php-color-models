@@ -12,6 +12,8 @@ use AlecRabbit\Color\Model\DTO\DRGB as RGB;
 /** @internal */
 final readonly class XYZToRGB extends ACoreConverter
 {
+    private const C = 1 / 2.4;
+
     public function __construct(int $precision = self::CALC_PRECISION)
     {
         parent::__construct(XYZ::class, $precision);
@@ -41,8 +43,8 @@ final readonly class XYZToRGB extends ACoreConverter
         return min(1.0, max(0.0, $v));
     }
 
-    protected function gammaCorrection(float $v): float
+    private function gammaCorrection(float $v): float
     {
-        return $v > 0.0031308 ? (1.055 * ($v ** (1 / 2.4)) - 0.055) : 12.92 * $v;
+        return $v > 0.0031308 ? (1.055 * ($v ** self::C) - 0.055) : 12.92 * $v;
     }
 }
