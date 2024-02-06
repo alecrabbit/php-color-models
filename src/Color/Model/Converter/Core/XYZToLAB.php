@@ -14,6 +14,12 @@ use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
 /** @internal */
 final readonly class XYZToLAB extends ACoreConverter
 {
+    private const DELTA = 6.0 / 29.0;
+    private const D3 = self::DELTA ** 3;
+    private const O3 = 1 / 3;
+    private const D6 = self::O3 * (self::DELTA ** -2);
+    private const C6 = 16 / 116;
+
     public function __construct(
         private IIlluminant $illuminant = new D65(),
         int $precision = self::CALC_PRECISION
@@ -24,28 +30,39 @@ final readonly class XYZToLAB extends ACoreConverter
     protected function doConvert(DColor $color): DColor
     {
         /** @var XYZ $color */
-        $x = ($color->x * 100) / ($this->illuminant->x * 100);
-        $y = ($color->y * 100) / ($this->illuminant->y * 100);
-        $z = ($color->z * 100) / ($this->illuminant->z * 100);
+        $x = $this->f($color->x / $this->illuminant->x);
+        $y = $this->f($color->y / $this->illuminant->y);
+        $z = $this->f($color->z / $this->illuminant->z);
 
-        $x = $this->correction($x);
-        $y = $this->correction($y);
-        $z = $this->correction($z);
-
-        $l = max(0, 116 * $y - 16);
-        $a = 5 * ($x - $y);
-        $b = 2 * ($y - $z);
+        $l = 116 * $y - 16;
+        $a = 500 * ($x - $y);
+        $b = 200 * ($y - $z);
 
         return new LAB(
-            round($l / 100, $this->precision),
-            round($a , $this->precision),
-            round($b, $this->precision),
+            round($this->normalizeL($l), $this->precision),
+            round($this->normalizeA($a), $this->precision),
+            round($this->normalizeB($b), $this->precision),
             round($color->alpha, $this->precision)
         );
     }
 
-    protected function correction(float $x): int|float
+    private function f(float $t): float
     {
-        return ($x > 0.008856) ? $x ** (1 / 3) : (7.787 * $x + 16 / 116);
+        return $t > self::D3 ? $t ** self::O3 : self::D6 * $t + self::C6;
+    }
+
+    private function normalizeL(float $l): float
+    {
+        return max(0,$l / 100);
+    }
+
+    private function normalizeA(float $a): float
+    {
+        return $a / 127;
+    }
+
+    private function normalizeB(float $b): float
+    {
+        return $b / 127;
     }
 }
