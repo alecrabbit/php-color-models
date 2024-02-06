@@ -6,8 +6,8 @@ namespace AlecRabbit\Color\Model\Converter\Core;
 
 use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Converter\Core\A\ACoreConverter;
-use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
 use AlecRabbit\Color\Model\DTO\DRGB as RGB;
+use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
 
 /** @internal */
 final readonly class RGBToXYZ extends ACoreConverter
@@ -17,6 +17,9 @@ final readonly class RGBToXYZ extends ACoreConverter
         parent::__construct(RGB::class, $precision);
     }
 
+    /**
+     *  Resulting XYZ values correspond to the D65Deg2 illuminant.
+     */
     protected function doConvert(DColor $color): DColor
     {
         /** @var RGB $color */

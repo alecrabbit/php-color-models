@@ -4,25 +4,39 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Converter\Core;
 
+use AlecRabbit\Color\Model\Contract\Converter\Core\IXYZNormalizer;
 use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Converter\Core\A\ACoreConverter;
-use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
+use AlecRabbit\Color\Model\Converter\Core\Normalizer\NoOpXYZNormalizer;
 use AlecRabbit\Color\Model\DTO\DRGB as RGB;
+use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
 
 /** @internal */
 final readonly class XYZToRGB extends ACoreConverter
 {
-    public function __construct(int $precision = self::CALC_PRECISION)
-    {
+    private const C = 1 / 2.4;
+
+    /**
+     * @param IXYZNormalizer $normalizer For XYZ normalization to D65/2° illuminant if necessary.
+     * @param int $precision Float rounding precision.
+     */
+    public function __construct(
+        private IXYZNormalizer $normalizer = new NoOpXYZNormalizer(),
+        int $precision = self::CALC_PRECISION,
+    ) {
         parent::__construct(XYZ::class, $precision);
     }
 
     protected function doConvert(DColor $color): DColor
     {
         /** @var XYZ $color */
-        $r = $color->x * 3.2406 + $color->y * -1.5372 + $color->z * -0.4986;
-        $g = $color->x * -0.9689 + $color->y * 1.8758 + $color->z * 0.0415;
-        $b = $color->x * 0.0557 + $color->y * -0.2040 + $color->z * 1.0570;
+        $x = $this->normalizer->normalizeX($color->x);
+        $y = $this->normalizer->normalizeY($color->y);
+        $z = $this->normalizer->normalizeZ($color->z);
+
+        $r = $x * 3.2406 + $y * -1.5372 + $z * -0.4986;
+        $g = $x * -0.9689 + $y * 1.8758 + $z * 0.0415;
+        $b = $x * 0.0557 + $y * -0.2040 + $z * 1.0570;
 
         $r = $this->clip($this->gammaCorrection($r));
         $g = $this->clip($this->gammaCorrection($g));
@@ -41,8 +55,8 @@ final readonly class XYZToRGB extends ACoreConverter
         return min(1.0, max(0.0, $v));
     }
 
-    protected function gammaCorrection(float $v): float
+    private function gammaCorrection(float $v): float
     {
-        return $v > 0.0031308 ? (1.055 * ($v ** (1 / 2.4)) - 0.055) : 12.92 * $v;
+        return $v > 0.0031308 ? (1.055 * ($v ** self::C) - 0.055) : 12.92 * $v;
     }
 }
