@@ -21,6 +21,7 @@ final class RGBToXYZTest extends TestCase
         yield from [
             // [expected, incoming]
             [new DXYZ(0, 0, 0), new DRGB(0, 0, 0)],
+            [new DXYZ(0.95047, 1.0, 1.08883), new DRGB(1, 1, 1)],
             [new DXYZ(0.496883, 0.569062, 0.430096), new DRGB(0.749012, 0.8, 0.639216)],
             [new DXYZ(0.253287, 0.188771, 0.079388), new DRGB(0.729412, 0.368627, 0.270588)],
             [new DXYZ(0.469782, 0.723315, 0.686005), new DRGB(0.290196, 0.968627, 0.8)],
