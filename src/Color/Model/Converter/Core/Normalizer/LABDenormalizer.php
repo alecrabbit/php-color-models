@@ -16,16 +16,16 @@ final readonly class LABDenormalizer implements ILABDenormalizer
 
     public function denormalizeL(float $l): float
     {
-        return $l / $this->range->getL();
+        return $l / $this->range->maxL();
     }
 
     public function denormalizeA(float $a): float
     {
-        return $a / $this->range->getA();
+        return $a / $this->range->maxA();
     }
 
     public function denormalizeB(float $b): float
     {
-        return $b / $this->range->getB();
+        return $b / $this->range->maxB();
     }
 }

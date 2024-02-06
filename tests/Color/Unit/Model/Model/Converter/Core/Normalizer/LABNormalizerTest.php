@@ -37,7 +37,7 @@ final class LABNormalizerTest extends TestCase
         $range = $this->getRangeMock();
         $range
             ->expects(self::once())
-            ->method('getL')
+            ->method('maxL')
             ->willReturn(1.0)
         ;
 
@@ -57,7 +57,7 @@ final class LABNormalizerTest extends TestCase
         $range = $this->getRangeMock();
         $range
             ->expects(self::once())
-            ->method('getA')
+            ->method('maxA')
             ->willReturn(1.0)
         ;
 
@@ -72,7 +72,7 @@ final class LABNormalizerTest extends TestCase
         $range = $this->getRangeMock();
         $range
             ->expects(self::once())
-            ->method('getB')
+            ->method('maxB')
             ->willReturn(1.0)
         ;
 

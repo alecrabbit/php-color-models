@@ -6,9 +6,15 @@ namespace AlecRabbit\Color\Model\Contract\Converter\Core;
 
 interface ILABRange
 {
-    public function getL(): float;
+    public function maxL(): float;
 
-    public function getA(): float;
+    public function maxA(): float;
 
-    public function getB(): float;
+    public function maxB(): float;
+
+    public function minL(): float;
+
+    public function minA(): float;
+
+    public function minB(): float;
 }
