@@ -21,20 +21,9 @@ final class NoOpXYZNormalizerTest extends TestCase
         self::assertInstanceOf(NoOpXYZNormalizer::class, $normalizer);
     }
 
-    private function getTesteeInstance(
-    ): IXYZNormalizer {
-        return new NoOpXYZNormalizer(
-        );
-    }
-
-    private function getDenormalizerMock(): MockObject&IXYZDenormalizer
+    private function getTesteeInstance(): IXYZNormalizer
     {
-        return $this->createMock(IXYZDenormalizer::class);
-    }
-
-    private function getNormalizerMock(): MockObject&IXYZNormalizer
-    {
-        return $this->createMock(IXYZNormalizer::class);
+        return new NoOpXYZNormalizer();
     }
 
     #[Test]
@@ -64,5 +53,15 @@ final class NoOpXYZNormalizerTest extends TestCase
 
         $testee = $this->getTesteeInstance();
         self::assertSame($z, $testee->normalizeZ($z));
+    }
+
+    private function getDenormalizerMock(): MockObject&IXYZDenormalizer
+    {
+        return $this->createMock(IXYZDenormalizer::class);
+    }
+
+    private function getNormalizerMock(): MockObject&IXYZNormalizer
+    {
+        return $this->createMock(IXYZNormalizer::class);
     }
 }

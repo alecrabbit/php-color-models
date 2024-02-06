@@ -6,8 +6,8 @@ namespace AlecRabbit\Color\Model\Converter;
 
 use AlecRabbit\Color\Model\Converter\A\AModelConverter;
 use AlecRabbit\Color\Model\Converter\Core\RGBToXYZ;
-use AlecRabbit\Color\Model\ModelXYZ;
 use AlecRabbit\Color\Model\ModelRGB;
+use AlecRabbit\Color\Model\ModelXYZ;
 
 /** @internal */
 final readonly class RGBToXYZModelConverter extends AModelConverter

@@ -14,6 +14,7 @@ final readonly class IlluminantXYZNormalizer implements IXYZNormalizer
         private IXYZNormalizer $normalizer,
     ) {
     }
+
     public function normalizeX(float $x): float
     {
         return $this->normalizer->normalizeX(

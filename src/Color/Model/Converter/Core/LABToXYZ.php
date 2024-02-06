@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace AlecRabbit\Color\Model\Converter\Core;
 
-use AlecRabbit\Color\Model\Contract\Converter\Core\IIlluminant;
 use AlecRabbit\Color\Model\Contract\Converter\Core\ILABNormalizer;
 use AlecRabbit\Color\Model\Contract\Converter\Core\IXYZNormalizer;
 use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Converter\Core\A\ACoreConverter;
-use AlecRabbit\Color\Model\Converter\Core\Illuminant\D65Deg2;
 use AlecRabbit\Color\Model\Converter\Core\Normalizer\LABNormalizer;
 use AlecRabbit\Color\Model\Converter\Core\Normalizer\XYZNormalizer;
 use AlecRabbit\Color\Model\DTO\DLAB as LAB;
