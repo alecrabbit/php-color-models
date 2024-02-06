@@ -66,16 +66,8 @@ final readonly class LABToXYZ extends ACoreConverter
 
     protected function f(float $t): float
     {
-        $t3 = $t ** 3.0;
-
-        return $t3 > self::D3
-            ? $t3
+        return $t > self::DELTA
+            ? $t ** 3.0
             : ($t - self::C6) / self::D6;
     }
-//    protected function f(float $t): float
-//    {
-//        return $t > self::DELTA
-//            ? $t ** 3.0
-//            : 3.0 * self::DELTA * self::DELTA * ($t - self::C4);
-//    }
 }
