@@ -6,6 +6,7 @@ namespace AlecRabbit\Color\Model\Converter\Core\Normalizer;
 
 use AlecRabbit\Color\Model\Contract\Converter\Core\ILABNormalizer;
 use AlecRabbit\Color\Model\Contract\Converter\Core\ILABRange;
+use AlecRabbit\Color\Model\Converter\Core\Range\LABRange;
 
 final readonly class LABNormalizer implements ILABNormalizer
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AlecRabbit\Tests\Color\Unit\Model\Converter\Core\Normalizer;
 
 use AlecRabbit\Color\Model\Contract\Converter\Core\ILABRange;
-use AlecRabbit\Color\Model\Converter\Core\Normalizer\LABRange;
+use AlecRabbit\Color\Model\Converter\Core\Range\LABRange;
 use AlecRabbit\Tests\TestCase\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AlecRabbit\Color\Model\Converter\Core\Normalizer;
+namespace AlecRabbit\Color\Model\Converter\Core\Denormalizer;
 
 use AlecRabbit\Color\Model\Contract\Converter\Core\IIlluminant;
 use AlecRabbit\Color\Model\Contract\Converter\Core\IXYZDenormalizer;

@@ -6,8 +6,8 @@ namespace AlecRabbit\Tests\Color\Unit\Model\Model\Converter\Core\Normalizer;
 
 use AlecRabbit\Color\Model\Contract\Converter\Core\ILABDenormalizer;
 use AlecRabbit\Color\Model\Contract\Converter\Core\ILABRange;
-use AlecRabbit\Color\Model\Converter\Core\Normalizer\LABDenormalizer;
-use AlecRabbit\Color\Model\Converter\Core\Normalizer\LABRange;
+use AlecRabbit\Color\Model\Converter\Core\Denormalizer\LABDenormalizer;
+use AlecRabbit\Color\Model\Converter\Core\Range\LABRange;
 use AlecRabbit\Tests\TestCase\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
