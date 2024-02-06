@@ -7,6 +7,7 @@ namespace AlecRabbit\Color\Model\Converter\Core;
 use AlecRabbit\Color\Model\Contract\Converter\Core\IXYZNormalizer;
 use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Converter\Core\A\ACoreConverter;
+use AlecRabbit\Color\Model\Converter\Core\Normalizer\NoOpXYZNormalizer;
 use AlecRabbit\Color\Model\DTO\DRGB as RGB;
 use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
 
@@ -15,22 +16,23 @@ final readonly class XYZToRGB extends ACoreConverter
 {
     private const C = 1 / 2.4;
 
+    /**
+     * @param IXYZNormalizer $normalizer For XYZ normalization to D65/2° illuminant if necessary.
+     * @param int $precision Float rounding precision.
+     */
     public function __construct(
+        private IXYZNormalizer $normalizer = new NoOpXYZNormalizer(),
         int $precision = self::CALC_PRECISION,
-    )
-    {
+    ) {
         parent::__construct(XYZ::class, $precision);
     }
 
-    /**
-     *  Input XYZ values should correspond to the D65Deg2 illuminant.
-     */
     protected function doConvert(DColor $color): DColor
     {
         /** @var XYZ $color */
-        $x = $color->x;
-        $y = $color->y;
-        $z = $color->z;
+        $x = $this->normalizer->normalizeX($color->x);
+        $y = $this->normalizer->normalizeY($color->y);
+        $z = $this->normalizer->normalizeZ($color->z);
 
         $r = $x * 3.2406 + $y * -1.5372 + $z * -0.4986;
         $g = $x * -0.9689 + $y * 1.8758 + $z * 0.0415;
