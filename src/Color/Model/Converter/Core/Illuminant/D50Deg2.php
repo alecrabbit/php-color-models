@@ -7,14 +7,13 @@ namespace AlecRabbit\Color\Model\Converter\Core\Illuminant;
 use AlecRabbit\Color\Model\Contract\Converter\Core\IIlluminant;
 
 /**
- * @see https://en.wikipedia.org/wiki/Illuminant_D65
  * @see https://en.wikipedia.org/wiki/CIELAB_color_space
  */
-final readonly class D65 implements IIlluminant
+final readonly class D50Deg2 implements IIlluminant
 {
-    private const XN = 0.950_470;
+    private const XN = 0.964_212;
     private const YN = 1.0;
-    private const ZN = 1.088_830;
+    private const ZN = 0.825_188;
 
     public function __construct(
         public float $x = self::XN,

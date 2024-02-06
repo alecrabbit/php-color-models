@@ -7,7 +7,7 @@ namespace AlecRabbit\Color\Model\Converter\Core;
 use AlecRabbit\Color\Model\Contract\Converter\Core\IIlluminant;
 use AlecRabbit\Color\Model\Contract\DTO\DColor;
 use AlecRabbit\Color\Model\Converter\Core\A\ACoreConverter;
-use AlecRabbit\Color\Model\Converter\Core\Illuminant\D65;
+use AlecRabbit\Color\Model\Converter\Core\Illuminant\D65Deg2;
 use AlecRabbit\Color\Model\DTO\DLAB as LAB;
 use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
 
@@ -15,13 +15,13 @@ use AlecRabbit\Color\Model\DTO\DXYZ as XYZ;
 final readonly class XYZToLAB extends ACoreConverter
 {
     private const DELTA = 6.0 / 29.0;
-    private const D3 = self::DELTA ** 3;
+    private const D3 = self::DELTA ** 3; // 0.008856
     private const O3 = 1 / 3;
     private const D6 = self::O3 * (self::DELTA ** -2);
     private const C6 = 16 / 116;
 
     public function __construct(
-        private IIlluminant $illuminant = new D65(),
+        private IIlluminant $illuminant = new D65Deg2(),
         int $precision = self::CALC_PRECISION
     ) {
         parent::__construct(XYZ::class, $precision);
@@ -53,7 +53,7 @@ final readonly class XYZToLAB extends ACoreConverter
 
     private function normalizeL(float $l): float
     {
-        return max(0,$l / 100);
+        return max(0, $l / 100);
     }
 
     private function normalizeA(float $a): float
